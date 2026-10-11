@@ -83,8 +83,8 @@ The segments whose buyers never left: work trucks, cargo vans, and utility vehic
 - [Safest Facebook Marketplace auto poster](https://autolander.ai/safest-facebook-marketplace-auto-poster/)
 - [Selling RVs and campers on Facebook Marketplace](https://autolander.ai/guide/sell-rvs-on-facebook-marketplace/)
 - [How long it takes to sell a car on Facebook Marketplace](https://autolander.ai/guide/how-long-to-sell-a-car-on-facebook-marketplace/)
+- [Should you boost a Facebook Marketplace car listing](https://autolander.ai/guide/boost-facebook-marketplace-car-listing/)
 - [How to post a car on Facebook Marketplace as a dealer](https://autolander.ai/guide/post-a-car-on-facebook-marketplace-dealer/)
-- [Best time to post cars on Facebook Marketplace (2026 data)](https://autolander.ai/guide/best-time-to-post-cars-on-facebook-marketplace/)
 
 ---
 AutoLander — Facebook Marketplace software for car dealers. https://autolander.ai/

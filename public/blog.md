@@ -4,7 +4,7 @@
 
 Source: https://autolander.ai/blog/  
 Author: The AutoLander team  
-Updated: October 10, 2026
+Updated: October 11, 2026
 
 Practical guidance for dealership teams that publish, merchandise, and market vehicle inventory. Start with the latest posts, or browse every published guide by topic.
 
@@ -27,6 +27,7 @@ Practical guidance for dealership teams that publish, merchandise, and market ve
 - [Facebook Marketplace vs Craigslist for Selling Cars (2026)](https://autolander.ai/guide/facebook-marketplace-vs-craigslist-for-selling-cars/)
 - [Selling RVs on Facebook Marketplace: A Dealer Guide](https://autolander.ai/guide/sell-rvs-on-facebook-marketplace/)
 - [How Long Does It Take to Sell a Car on Facebook Marketplace](https://autolander.ai/guide/how-long-to-sell-a-car-on-facebook-marketplace/)
+- [Boost a Facebook Marketplace Listing? When It’s Worth It](https://autolander.ai/guide/boost-facebook-marketplace-car-listing/)
 
 ## Guides and playbooks: Photos & merchandising
 

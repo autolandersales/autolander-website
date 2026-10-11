@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10",
+  "generatedAt": "2026-10-11",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -908,8 +908,8 @@
       ],
       "description": "What it means to boost a Facebook Marketplace listing, what it costs, and when a car dealer should pay — after the free fundamentals, never instead of them.",
       "suggestedOrder": 36,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-11",
       "siloOrder": 3,
       "cluster": null,
       "clusterLabel": null,

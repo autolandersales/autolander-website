@@ -86,7 +86,7 @@ Renewal pushes a listing back toward the fresh end of the feed, and for a health
 - [Facebook Marketplace vs Craigslist for selling cars](https://autolander.ai/guide/facebook-marketplace-vs-craigslist-for-selling-cars/)
 - [Selling RVs and campers on Facebook Marketplace](https://autolander.ai/guide/sell-rvs-on-facebook-marketplace/)
 - [How long it takes to sell a car on Facebook Marketplace](https://autolander.ai/guide/how-long-to-sell-a-car-on-facebook-marketplace/)
-- [How to post a car on Facebook Marketplace as a dealer](https://autolander.ai/guide/post-a-car-on-facebook-marketplace-dealer/)
+- [Should you boost a Facebook Marketplace car listing](https://autolander.ai/guide/boost-facebook-marketplace-car-listing/)
 
 ---
 AutoLander — Facebook Marketplace software for car dealers. https://autolander.ai/

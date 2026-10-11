@@ -194,7 +194,7 @@
   </url>
   <url>
     <loc>https://autolander.ai/blog/</loc>
-    <lastmod>2026-10-10</lastmod>
+    <lastmod>2026-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -405,6 +405,12 @@
   <url>
     <loc>https://autolander.ai/guide/how-long-to-sell-a-car-on-facebook-marketplace/</loc>
     <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://autolander.ai/guide/boost-facebook-marketplace-car-listing/</loc>
+    <lastmod>2026-10-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

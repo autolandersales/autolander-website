@@ -87,10 +87,10 @@ Dealers certainly bet on trucks: across 17,778 posts in [AutoLander’s 2026 Mar
 - [How to sell cars on Facebook Marketplace](https://autolander.ai/guide/how-to-sell-cars-on-facebook-marketplace/)
 - [Facebook Marketplace auto poster for car dealers](https://autolander.ai/facebook-marketplace-auto-poster/)
 - [Safest Facebook Marketplace auto poster](https://autolander.ai/safest-facebook-marketplace-auto-poster/)
+- [Should you boost a Facebook Marketplace car listing](https://autolander.ai/guide/boost-facebook-marketplace-car-listing/)
 - [How to post a car on Facebook Marketplace as a dealer](https://autolander.ai/guide/post-a-car-on-facebook-marketplace-dealer/)
 - [Best time to post cars on Facebook Marketplace (2026 data)](https://autolander.ai/guide/best-time-to-post-cars-on-facebook-marketplace/)
 - [Facebook Marketplace car listing limits for dealers](https://autolander.ai/guide/facebook-marketplace-car-listing-limits/)
-- [Why Facebook Marketplace removes car listings (and how to fix it)](https://autolander.ai/guide/facebook-marketplace-car-listing-removed/)
 
 ---
 AutoLander — Facebook Marketplace software for car dealers. https://autolander.ai/

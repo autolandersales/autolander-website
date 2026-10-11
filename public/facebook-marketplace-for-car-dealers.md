@@ -169,6 +169,7 @@ Yes. When a car is marked sold or drops out of the feed, AutoLander removes the 
 - [Facebook Marketplace vs Craigslist for selling cars](https://autolander.ai/guide/facebook-marketplace-vs-craigslist-for-selling-cars/)
 - [Selling RVs and campers on Facebook Marketplace](https://autolander.ai/guide/sell-rvs-on-facebook-marketplace/)
 - [How long it takes to sell a car on Facebook Marketplace](https://autolander.ai/guide/how-long-to-sell-a-car-on-facebook-marketplace/)
+- [Should you boost a Facebook Marketplace car listing](https://autolander.ai/guide/boost-facebook-marketplace-car-listing/)
 - [Q4 used car sales playbook for Facebook Marketplace](https://autolander.ai/blog/q4-used-car-sales-facebook-marketplace/)
 
 ---
