@@ -75,6 +75,7 @@ Practical guidance for dealership teams that publish, merchandise, and market ve
 - [AEO vs SEO for Car Dealers: What Changes, What Stays](https://autolander.ai/aeo-geo/aeo-vs-seo-for-car-dealers/)
 - [How to Measure Your Dealership’s AI Visibility Honestly](https://autolander.ai/aeo-geo/measure-dealership-ai-visibility/)
 - [AI Search for Independent Used Car Dealers: Where to Start](https://autolander.ai/aeo-geo/ai-search-for-independent-dealers/)
+- [Choosing an AEO Agency for Your Dealership: 15 Questions](https://autolander.ai/aeo-geo/how-to-choose-an-aeo-agency/)
 
 ## Evergreen hubs
 
