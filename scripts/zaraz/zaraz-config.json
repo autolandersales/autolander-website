@@ -117,6 +117,7 @@
           "blockingTriggers": ["alBlockHost", "alBlockPath"],
           "data": {
             "en": "generate_lead",
+            "conversion": "true",
             "method": "{{ client.method }}",
             "lead_source": "{{ client.lead_source }}",
             "lead_medium": "{{ client.lead_medium }}",

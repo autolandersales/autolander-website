@@ -184,3 +184,13 @@ test('CLI refuses all backup paths inside the public repository, including dot-p
     assert.match(output.at(-1), /Backup directory must be outside/);
   }
 });
+
+test('generate_lead is sent as a GA4 key event (_c=1); other custom events are not', () => {
+  // The GA4 managed component only sets `_c=1` when the action data has a truthy
+  // `conversion`. gtag set it automatically, so without this field the 2026-09-29
+  // Zaraz cutover silently zeroed GA4 key events while generate_lead kept arriving.
+  const actions = desired.tools.alGa4.actions;
+  const byEvent = Object.fromEntries(Object.values(actions).filter((a) => a.actionType === 'event').map((a) => [a.data.en, a.data]));
+  assert.equal(byEvent.generate_lead.conversion, 'true');
+  for (const [en, data] of Object.entries(byEvent)) if (en !== 'generate_lead') assert.equal(data.conversion, undefined, en);
+});
