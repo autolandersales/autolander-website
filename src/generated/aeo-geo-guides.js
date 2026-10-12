@@ -11,6 +11,10 @@ export const AEO_GEO_GUIDES = [
         "href": "/aeo-geo/can-chatgpt-see-my-dealer-website/",
         "text": "Can ChatGPT and Claude read your dealership website? A 15-minute check",
         "pillar": true
+      },
+      {
+        "href": "/aeo-geo/cloudflare-ai-bots-dealer-websites/",
+        "text": "Cloudflare AI bot blocking on dealer websites: what to allow"
       }
     ]
   },
@@ -105,4 +109,4 @@ export const AEO_GEO_GUIDES = [
 ];
 // Newest publish or edit date among them (null while none is published): src/ai/page-updated.js
 // moves the money page's Updated date / dateModified forward with it.
-export const AEO_GEO_GUIDES_UPDATED = "2026-10-11";
+export const AEO_GEO_GUIDES_UPDATED = "2026-10-12";

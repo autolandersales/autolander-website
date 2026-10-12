@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11",
+  "generatedAt": "2026-10-12",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1171,8 +1171,8 @@
       ],
       "description": "How Cloudflare’s AI bot blocking can hide a dealer website from AI search, what its Search, Agent and Training bot categories mean, and what to allow.",
       "suggestedOrder": 46,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-12",
       "siloOrder": 0,
       "cluster": "website",
       "clusterLabel": "Your website: crawlers, schema and vehicle pages",
