@@ -1,9 +1,13 @@
-import { ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { Camera, ExternalLink } from 'lucide-react';
+import { FailureScreenshot } from './FailureScreenshot.jsx';
 import { formatDate, formatRelative } from './lib/analytics-format.js';
 import { humanizeFailureValue } from './lib/failure-diagnostics.js';
 
 export function FailureEventRow({ failure }) {
+  const [open, setOpen] = useState(false);
   const occurredAt = failure?.occurredAt;
+  const screenshot = failure?.screenshot || null;
   const entityContext = [failure?.vehicle?.label, failure?.user?.label].filter(Boolean).join(' / ');
   const feedUrl = canonicalUrl(
     failure?.feedUrl,
@@ -21,7 +25,10 @@ export function FailureEventRow({ failure }) {
   );
 
   return (
-    <details className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/35">
+    <details
+      className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/35"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary className="min-w-0 cursor-pointer px-3 py-3 marker:text-slate-600 sm:px-4">
         <div className="ml-1 min-w-0 sm:ml-2">
           <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
@@ -33,6 +40,11 @@ export function FailureEventRow({ failure }) {
                 {failure?.area && <FailureChip>{humanizeFailureValue(failure.area)}</FailureChip>}
                 {failure?.stage && <FailureChip>{humanizeFailureValue(failure.stage)}</FailureChip>}
                 <Recoverability value={failure?.recoverable} />
+                {screenshot && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/25 bg-violet-400/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-wider text-violet-200">
+                    <Camera size={10} aria-hidden="true" /> Browser view
+                  </span>
+                )}
                 {failure?.recentFailures !== null && failure?.recentFailures !== undefined && (
                   <FailureChip>{finite(failure.recentFailures, 0).toLocaleString()} recent</FailureChip>
                 )}
@@ -62,6 +74,7 @@ export function FailureEventRow({ failure }) {
       </summary>
 
       <div className="min-w-0 space-y-3 border-t border-white/10 bg-black/25 px-3 py-3 sm:px-4">
+        {screenshot && <FailureScreenshot key={screenshot.id} meta={screenshot} active={open} />}
         <dl className="grid min-w-0 grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2">
           <TechnicalFact label="Event ID" value={failure?.id} />
           <TechnicalFact label="Occurred" value={occurredAt ? formatDate(occurredAt, true) : ''} />

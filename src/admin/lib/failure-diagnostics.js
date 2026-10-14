@@ -148,8 +148,91 @@ export function normalizeFailure(row, index = 0) {
       row.recentFailures ?? row.occurrences ?? row.recentCount ?? row.failureCount,
     ),
     legacy: Boolean(row.legacy),
+    // Train 3814: the browser frame the desktop captured at this failure (metadata only; the image
+    // itself is fetched lazily by FailureScreenshot.jsx and never kept on the row).
+    screenshot: normalizeFailureScreenshot(row.screenshot),
     raw: row.raw && typeof row.raw === 'object' ? row.raw : row,
   };
+}
+
+const SCREENSHOT_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function screenshotDate(value) {
+  if (typeof value !== 'string' || !value.trim()) return '';
+  const time = Date.parse(value);
+  return Number.isFinite(time) ? new Date(time).toISOString() : '';
+}
+
+function screenshotCount(value) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : null;
+}
+
+function screenshotText(value, max) {
+  return typeof value === 'string' && value.trim() ? value.trim().slice(0, max) : '';
+}
+
+// The page the frame shows, as TEXT only (http/https, origin + path); never rendered as a link.
+function screenshotPageUrl(value) {
+  if (typeof value !== 'string' || !value.trim()) return '';
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+    return `${url.origin}${url.pathname}`.slice(0, 300);
+  } catch {
+    return '';
+  }
+}
+
+// Failure-screenshot metadata from an ops failure row: null when absent, malformed or expired
+// (frames are kept 7 days). Keeps only the listed fields; never an image or a storage URL.
+export function normalizeFailureScreenshot(value, now = Date.now()) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const id = typeof value.id === 'string' ? value.id.trim() : '';
+  if (!SCREENSHOT_ID_RE.test(id)) return null;
+  const expiresAt = screenshotDate(value.expiresAt);
+  if (!expiresAt || Date.parse(expiresAt) <= now) return null;
+  return {
+    id,
+    capturedAt: screenshotDate(value.capturedAt),
+    expiresAt,
+    width: screenshotCount(value.width),
+    height: screenshotCount(value.height),
+    bytes: screenshotCount(value.bytes),
+    kind: screenshotText(value.kind, 40),
+    pageUrl: screenshotPageUrl(value.pageUrl),
+    pageTitle: screenshotText(value.pageTitle, 200),
+  };
+}
+
+// "1280×720 · 142 KB · expires in 6 d · /marketplace/you/selling" (the capture time is shown
+// separately, relative). Pure, for the row caption.
+export function describeFailureScreenshot(meta, now = Date.now()) {
+  if (!meta) return '';
+  const parts = [];
+  if (meta.width && meta.height) parts.push(`${meta.width}×${meta.height}`);
+  if (meta.bytes) parts.push(`${Math.max(1, Math.round(meta.bytes / 1024))} KB`);
+  const expiresMs = Date.parse(meta.expiresAt);
+  if (Number.isFinite(expiresMs)) {
+    const days = Math.max(0, Math.ceil((expiresMs - now) / DAY_MS));
+    parts.push(days <= 1 ? 'expires within a day' : `expires in ${days} d`);
+  }
+  if (meta.pageUrl) {
+    try {
+      const url = new URL(meta.pageUrl);
+      parts.push(`${url.hostname}${url.pathname}`);
+    } catch {
+      // pageUrl is already validated; nothing to add when it is not.
+    }
+  }
+  return parts.join(' · ');
+}
+
+// The row's message when the frame cannot be shown.
+export function failureScreenshotErrorText(error) {
+  const status = Number(error?.status) || 0;
+  if (status === 404) return 'Screenshot expired (kept 7 days).';
+  if (status === 503) return 'Screenshot storage unavailable.';
+  return 'Could not load the screenshot. Try again in a moment.';
 }
 
 export function buildLegacyFeedFailures(feeds) {

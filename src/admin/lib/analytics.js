@@ -1,5 +1,5 @@
 import { apiGet, apiPost, apiPut } from './api.js';
-import { normalizeFailureResponse } from './failure-diagnostics.js';
+import { normalizeFailureResponse, normalizeFailureScreenshot } from './failure-diagnostics.js';
 import { normalizePostResponse } from './post-analytics.js';
 export { isOpsNotConfigured, OPS_SETUP_NOTE } from './ops.js';
 
@@ -64,6 +64,24 @@ export async function fetchAccountFailures(orgId, params = {}) {
     { signal: params.signal },
   );
   return normalizeFailureResponse(payload, request);
+}
+
+// Train 3814: the browser frame captured at a failure (staff only; the Worker adds the ops token).
+// Returns the frame metadata plus a data:image/jpeg URL; throws the ApiError of the request (404 =
+// expired or purged, 503 = storage unavailable) or a 502-shaped error for a malformed reply.
+export async function fetchFailureScreenshot(id, { signal } = {}) {
+  const payload = await apiGet(`${BASE}/failure-screenshots/${encodeURIComponent(id)}`, { signal });
+  const dataUrl = typeof payload?.dataUrl === 'string' && payload.dataUrl.startsWith('data:image/jpeg;base64,')
+    ? payload.dataUrl
+    : '';
+  const meta = normalizeFailureScreenshot(payload);
+  if (!dataUrl || !meta) {
+    const error = new Error('invalid_screenshot');
+    error.status = 502;
+    error.reason = 'invalid_screenshot';
+    throw error;
+  }
+  return { ...meta, dataUrl };
 }
 
 export async function fetchAccountFeedFailures(orgId, params = {}) {
