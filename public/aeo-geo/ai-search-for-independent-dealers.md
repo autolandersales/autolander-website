@@ -127,8 +127,8 @@ The first fixes cost time, and the free scan costs nothing. If you want the work
 - [About AutoLander — who we are and how our data is produced](https://autolander.ai/about/)
 - [How to choose an AEO agency for your dealership: 15 questions to ask](https://autolander.ai/aeo-geo/how-to-choose-an-aeo-agency/)
 - [Cloudflare AI bot blocking on dealer websites: what to allow](https://autolander.ai/aeo-geo/cloudflare-ai-bots-dealer-websites/)
+- [Vehicle detail pages AI can read: price, mileage and VIN as text](https://autolander.ai/aeo-geo/vehicle-detail-page-ai-readable/)
 - [Can ChatGPT and Claude read your dealership website? A 15-minute check](https://autolander.ai/aeo-geo/can-chatgpt-see-my-dealer-website/)
-- [How ChatGPT decides which car dealerships to recommend](https://autolander.ai/aeo-geo/how-chatgpt-recommends-car-dealerships/)
 - [How to sell cars online as a small dealership](https://autolander.ai/guide/sell-cars-online-small-dealership/)
 - [Used car dealership advertising on a budget: the $0-first ladder](https://autolander.ai/guide/used-car-dealer-advertising-on-a-budget/)
 

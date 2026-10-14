@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12",
+  "generatedAt": "2026-10-14",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1406,8 +1406,8 @@
       ],
       "description": "How to make vehicle detail pages that AI tools and search engines can read: price, mileage, VIN and features as text, not locked in images or scripts.",
       "suggestedOrder": 55,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-14",
       "siloOrder": 0,
       "cluster": "website",
       "clusterLabel": "Your website: crawlers, schema and vehicle pages",

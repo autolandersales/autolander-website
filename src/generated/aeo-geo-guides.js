@@ -15,6 +15,10 @@ export const AEO_GEO_GUIDES = [
       {
         "href": "/aeo-geo/cloudflare-ai-bots-dealer-websites/",
         "text": "Cloudflare AI bot blocking on dealer websites: what to allow"
+      },
+      {
+        "href": "/aeo-geo/vehicle-detail-page-ai-readable/",
+        "text": "Vehicle detail pages AI can read: price, mileage and VIN as text"
       }
     ]
   },
@@ -109,4 +113,4 @@ export const AEO_GEO_GUIDES = [
 ];
 // Newest publish or edit date among them (null while none is published): src/ai/page-updated.js
 // moves the money page's Updated date / dateModified forward with it.
-export const AEO_GEO_GUIDES_UPDATED = "2026-10-12";
+export const AEO_GEO_GUIDES_UPDATED = "2026-10-14";

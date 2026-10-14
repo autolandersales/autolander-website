@@ -295,6 +295,10 @@
         {
           "href": "/aeo-geo/cloudflare-ai-bots-dealer-websites/",
           "text": "Cloudflare AI bot blocking on dealer websites: what to allow"
+        },
+        {
+          "href": "/aeo-geo/vehicle-detail-page-ai-readable/",
+          "text": "Vehicle detail pages AI can read: price, mileage and VIN as text"
         }
       ]
     },

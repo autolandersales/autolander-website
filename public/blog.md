@@ -4,7 +4,7 @@
 
 Source: https://autolander.ai/blog/  
 Author: The AutoLander team  
-Updated: October 12, 2026
+Updated: October 14, 2026
 
 Practical guidance for dealership teams that publish, merchandise, and market vehicle inventory. Start with the latest posts, or browse every published guide by topic.
 
@@ -77,6 +77,7 @@ Practical guidance for dealership teams that publish, merchandise, and market ve
 - [AI Search for Independent Used Car Dealers: Where to Start](https://autolander.ai/aeo-geo/ai-search-for-independent-dealers/)
 - [Choosing an AEO Agency for Your Dealership: 15 Questions](https://autolander.ai/aeo-geo/how-to-choose-an-aeo-agency/)
 - [Cloudflare AI Bot Blocking on Dealer Websites: What to Set](https://autolander.ai/aeo-geo/cloudflare-ai-bots-dealer-websites/)
+- [Vehicle Detail Pages AI Can Read: Price, Miles and VIN](https://autolander.ai/aeo-geo/vehicle-detail-page-ai-readable/)
 
 ## Evergreen hubs
 

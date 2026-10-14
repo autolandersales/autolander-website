@@ -228,8 +228,8 @@
     "publishedAt": null
   },
   "vehicle-detail-page-ai-readable": {
-    "status": "draft",
-    "publishedAt": null
+    "status": "published",
+    "publishedAt": "2026-10-14"
   },
   "how-claude-cites-sources": {
     "status": "draft",
