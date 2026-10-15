@@ -120,10 +120,10 @@ There is no published answer, because OpenAI does not list its ranking factors. 
 - [AI for car dealerships: what actually works](https://autolander.ai/guide/ai-for-car-dealerships/)
 - [Car dealership marketing: the 2026 playbook](https://autolander.ai/guide/car-dealership-marketing/)
 - [About AutoLander — who we are and how our data is produced](https://autolander.ai/about/)
+- [Google AI Overviews for car dealers: when they show and who gets cited](https://autolander.ai/aeo-geo/google-ai-overviews-for-car-dealers/)
 - [How car buyers use ChatGPT and other AI tools to shop, and what it means for dealers](https://autolander.ai/aeo-geo/how-car-buyers-use-chatgpt/)
 - [Dealership reviews and AI recommendations: volume, recency and what the words say](https://autolander.ai/aeo-geo/dealership-reviews-ai-recommendations/)
 - [Answer pages for car dealerships: what they are and how to write one](https://autolander.ai/aeo-geo/answer-pages-for-car-dealerships/)
-- [AEO vs SEO for car dealers: what changes and what stays the same](https://autolander.ai/aeo-geo/aeo-vs-seo-for-car-dealers/)
 
 ---
 AutoLander: AEO and GEO for car dealers. https://autolander.ai/aeo-geo-for-car-dealers/

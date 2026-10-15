@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14",
+  "generatedAt": "2026-10-15",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1197,8 +1197,8 @@
       ],
       "description": "How Google AI Overviews work for car dealers: when they appear, how Google picks the pages it cites, and what a dealership can and can’t control.",
       "suggestedOrder": 47,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-15",
       "siloOrder": 0,
       "cluster": "engines",
       "clusterLabel": "How each AI assistant picks a dealer",
