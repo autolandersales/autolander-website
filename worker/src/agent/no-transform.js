@@ -49,9 +49,10 @@
 // Analytics. Any error in here returns the response unchanged.
 
 import { AI_VISIBILITY_PATH } from '../../../shared/ai-visibility-route.js';
+import { PAID_ADS_PATH } from '../../../shared/paid-ads-route.js';
 
 // The retired /ai-visibility/ is not listed: the Worker answers it with a 301 (moved-pages.js) before this runs.
-export const NO_TRANSFORM_PATHS = new Set(['/', '/index.html', AI_VISIBILITY_PATH, '/team/']);
+export const NO_TRANSFORM_PATHS = new Set(['/', '/index.html', AI_VISIBILITY_PATH, '/team/', PAID_ADS_PATH]);
 export const NO_TRANSFORM_KEY = 'cfg:html_no_transform';
 
 export async function readNoTransformMode(env) {

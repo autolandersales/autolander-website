@@ -11,6 +11,11 @@ test('pickBoot hydrates only the prerendered page it was built for', () => {
   assert.equal(pickBoot('ai-visibility', '/aeo-geo-for-car-dealers'), 'ai-visibility');
   assert.equal(pickBoot('team', '/team/'), 'team');
   assert.equal(pickBoot('team', '/team'), 'team');
+  assert.equal(pickBoot('paid-ads', '/meta-ads-for-car-dealers/'), 'paid-ads');
+  assert.equal(pickBoot('paid-ads', '/meta-ads-for-car-dealers'), 'paid-ads');
+  assert.equal(pickBoot('paid-ads', '/team/'), 'spa');
+  assert.equal(pickBoot('team', '/meta-ads-for-car-dealers/'), 'spa');
+  assert.equal(pickBoot(null, '/meta-ads-for-car-dealers/'), 'spa');
   // The retired URL never hydrates (it is a 301 or a redirect stub).
   assert.equal(pickBoot('ai-visibility', '/ai-visibility/'), 'spa');
   assert.equal(pickBoot('ai-visibility', '/ai-visibility'), 'spa');

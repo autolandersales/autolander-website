@@ -4,6 +4,8 @@ import { HERO, FORM } from '../shared/ai-visibility-content.js';
 import { CHIPS, DEMO_LINE, HEADLINES, SUBS } from '../shared/team-content.js';
 import { renderAiVisibilityMirrorRest } from '../src/ai/static-mirror.js';
 import { renderTeamMirrorRest } from '../src/team/static-mirror.js';
+import { renderPaidAdsMirrorRest } from '../src/ads/static-mirror.js';
+import { HEADLINES as ADS_HEADLINES, FORM as ADS_FORM } from '../shared/paid-ads-content.js';
 import { teamVariantFromSearch } from '../src/team/variant.js';
 import { cleanSsr, loadPrerender } from '../scripts/prerender.mjs';
 import { HTMLParser } from './helpers/html-text.js';
@@ -16,10 +18,13 @@ const text = (html) => new HTMLParser().textOf(html);
 const renders = {
   ai: (restHtml = renderAiVisibilityMirrorRest()) => P.renderAiVisibility({ restHtml }),
   team: (restHtml = renderTeamMirrorRest()) => P.renderTeam({ restHtml, variant: 'a' }),
+  ads: (restHtml = renderPaidAdsMirrorRest()) => P.renderPaidAds({ restHtml, variant: 'a' }),
 };
+const mirrors = { ai: renderAiVisibilityMirrorRest, team: renderTeamMirrorRest, ads: renderPaidAdsMirrorRest };
 const shape = {
   ai: { island: 'ai-rest', h1Text: `${HERO.h1Lead} ${HERO.h1Grad}` },
   team: { island: 'team-rest', h1Text: HEADLINES.a },
+  ads: { island: 'ads-rest', h1Text: ADS_HEADLINES.a },
 };
 
 function withBrowserGlobals(fn) {
@@ -40,7 +45,7 @@ function withBrowserGlobals(fn) {
   }
 }
 
-for (const route of ['ai', 'team']) {
+for (const route of ['ai', 'team', 'ads']) {
   test(`${route}: the prerender is deterministic and reads nothing from the browser`, () => {
     const first = renders[route]();
     assert.equal(renders[route](), first, 'two renders differ');
@@ -53,7 +58,7 @@ for (const route of ['ai', 'team']) {
     const withSentinel = renders[route](sentinel);
     const empty = renders[route]('');
     assert.equal(withSentinel.replace(sentinel, ''), empty);
-    assert.ok(renders[route]().includes(`<div data-al-island="${shape[route].island}">${route === 'ai' ? renderAiVisibilityMirrorRest() : renderTeamMirrorRest()}</div></main>`));
+    assert.ok(renders[route]().includes(`<div data-al-island="${shape[route].island}">${mirrors[route]()}</div></main>`));
   });
 
   test(`${route}: cleanSsr yields #root content hydration can adopt`, () => {
@@ -110,5 +115,24 @@ test('team variants: the boot picks the same variant the component would, and b/
     const html = P.renderTeam({ restHtml: '', variant });
     assert.ok(text(html).includes(HEADLINES[variant]), variant);
     assert.match(html, new RegExp(`data-headline-variant="${variant}"`));
+  }
+});
+
+test('ads hero: the first screen is React\'s hero with its no-JS anchor and one eager poster image', () => {
+  const root = cleanSsr(renders.ads(), { ...shape.ads, headHtml: LOGO_HEAD });
+  const hero = root.slice(0, root.indexOf('data-al-island'));
+  assert.ok(hero.includes('<nav aria-label="Main navigation"'), 'nav is prerendered');
+  assert.match(hero, /<p class="al-ads-summary[^"]*">/, 'the speakable summary selector is on the hero paragraph');
+  assert.match(hero, /<a href="#apply-form" data-apply-cta=""/, 'the hero CTA is a real in-page link without JS');
+  assert.match(hero, /data-headline-variant="a"/);
+  assert.equal((hero.match(/fetchPriority="high"|fetchpriority="high"/gi) || []).length, 1, 'exactly one high-priority image');
+  assert.doesNotMatch(hero, /<video\b/, 'the hero loop video mounts only once the page is live');
+  assert.ok(!hero.includes('id="apply-form"'), 'the form lives in the island until the page goes live');
+  const island = root.slice(root.indexOf('data-al-island'));
+  assert.equal((island.match(/<form id="apply-form" method="post" action="https:\/\/autolander\.ai\/api\/ads-apply"/g) || []).length, 1);
+  assert.ok(island.includes(`toolname="${ADS_FORM.webmcp.toolname}"`));
+  for (const variant of ['b']) {
+    const html = P.renderPaidAds({ restHtml: '', variant });
+    assert.ok(text(html).includes(ADS_HEADLINES[variant]), variant);
   }
 });

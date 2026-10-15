@@ -11,9 +11,12 @@ const input = resolve(process.argv[2]);
 sharp.concurrency(1);
 const ai = ['ai-chat-phone', 'ai-chat-tablet', 'ai-overview-search', 'ai-chat-desktop', 'ai-answer-sourced', 'search-performance', 'ai-referrals', 'report-preview', 'vehicle-page-check'];
 const team = { 'sales-hub': 'sales_hub', dashboard: 'dashboard', 'team-access': 'team', autopilot: 'autopilot' };
+// Paid ads page: frames of AutoLander's own Slow Day commercial (scripts/image-sources/paid-ads/, 1080 x 1920).
+const ads = ['commercial-poster', 'commercial-close'];
 const sources = [
   ...ai.map((slug) => ({ slug, folder: 'ai-visibility', input: resolve(input, `${slug}.png`) })),
   ...Object.entries(team).map(([slug, source]) => ({ slug, folder: 'team', input: resolve(root, 'public/training/manuals/assets', `${source}.png`) })),
+  ...ads.map((slug) => ({ slug, folder: 'paid-ads', input: resolve(root, 'scripts/image-sources/paid-ads', `${slug}.png`) })),
 ];
 // Main column only, below the onboarding and referral banners. Coordinates are
 // in the original 2880 x 1800 sales_hub.png; exclude the entire account sidebar.

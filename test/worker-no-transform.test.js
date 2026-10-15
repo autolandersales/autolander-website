@@ -8,6 +8,7 @@ import {
 } from '../worker/src/agent/no-transform.js';
 import { beaconLoaderHtml, CF_WEB_ANALYTICS_TOKEN } from '../scripts/spa-shell.mjs';
 import { AI_VISIBILITY_DIR, AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js';
+import { PAID_ADS_DIR, PAID_ADS_PATH } from '../shared/paid-ads-route.js';
 
 const html = '<html><head><script defer src="/al-tags-v1.js"></script></head><body>OK</body></html>';
 const page = (headers = {}, status = 200) => new Response(html, { status, headers: {
@@ -163,7 +164,7 @@ test('the Worker applies it end to end on the homepage and nowhere else, keeping
 });
 
 test('the built no-transform pages are exactly the pages that load Web Analytics themselves', { skip: !existsSync('dist/index.html') }, () => {
-  const files = { '/': 'dist/index.html', '/index.html': 'dist/index.html', [AI_VISIBILITY_PATH]: `dist/${AI_VISIBILITY_DIR}/index.html`, '/team/': 'dist/team/index.html' };
+  const files = { '/': 'dist/index.html', '/index.html': 'dist/index.html', [AI_VISIBILITY_PATH]: `dist/${AI_VISIBILITY_DIR}/index.html`, '/team/': 'dist/team/index.html', [PAID_ADS_PATH]: `dist/${PAID_ADS_DIR}/index.html` };
   assert.deepEqual([...NO_TRANSFORM_PATHS].sort(), Object.keys(files).sort());
   for (const [path, file] of Object.entries(files)) {
     const built = readFileSync(file, 'utf8');

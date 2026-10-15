@@ -71,7 +71,7 @@ export function routeCssCoveragePlugin() {
     name: 'route-css-coverage',
     apply: 'build',
     generateBundle() {
-      for (const [route, name] of [['ai', 'AiVisibilityApp'], ['team', 'TeamApp']]) {
+      for (const [route, name] of [['ai', 'AiVisibilityApp'], ['team', 'TeamApp'], ['ads', 'PaidAdsApp']]) {
         const modules = new Set();
         const visit = (id) => {
           if (modules.has(id) || id.includes('/node_modules/')) return;

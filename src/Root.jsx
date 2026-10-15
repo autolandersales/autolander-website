@@ -2,11 +2,13 @@ import { Suspense, lazy, useEffect } from 'react'
 import App from './App.jsx'
 import { pageView } from './lib/tags.js'
 import { AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js'
+import { PAID_ADS_PATH } from '../shared/paid-ads-route.js'
 
 const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
 const PayApp = lazy(() => import('./pay/PayApp.jsx'))
 const TeamApp = lazy(() => import('./team/TeamApp.jsx'))
 const AiVisibilityApp = lazy(() => import('./ai/AiVisibilityApp.jsx'))
+const PaidAdsApp = lazy(() => import('./ads/PaidAdsApp.jsx'))
 
 function isAdminPath() {
   if (typeof window === 'undefined') return false
@@ -31,6 +33,13 @@ function isAiVisibilityPath() {
   if (typeof window === 'undefined') return false
   const path = window.location.pathname
   return path === AI_VISIBILITY_PATH || path === AI_VISIBILITY_PATH.slice(0, -1)
+}
+
+// Exact PAID_ADS_PATH only (paid ads + AI commercials for car dealers).
+function isPaidAdsPath() {
+  if (typeof window === 'undefined') return false
+  const path = window.location.pathname
+  return path === PAID_ADS_PATH || path === PAID_ADS_PATH.slice(0, -1)
 }
 
 export default function Root() {
@@ -67,6 +76,14 @@ export default function Root() {
     return (
       <Suspense fallback={null}>
         <AiVisibilityApp />
+      </Suspense>
+    )
+  }
+
+  if (isPaidAdsPath()) {
+    return (
+      <Suspense fallback={null}>
+        <PaidAdsApp />
       </Suspense>
     )
   }

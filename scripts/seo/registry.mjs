@@ -7,6 +7,7 @@
 
 import { SITE } from '../compare-data.mjs';
 import { AI_VISIBILITY_PATH } from '../../shared/ai-visibility-route.js';
+import { PAID_ADS_PATH } from '../../shared/paid-ads-route.js';
 
 export { SITE };
 
@@ -39,6 +40,8 @@ export const NAV = {
   aiDealers:  { key: 'aiDealers',  path: '/guide/ai-for-car-dealerships/',             anchor: 'AI for car dealerships: what actually works' },
   // The AEO and GEO page (was /ai-visibility/, which now 301s here; the URL lives in shared/ai-visibility-route.js).
   aiVisibility:{ key: 'aiVisibility', path: AI_VISIBILITY_PATH,                          anchor: 'AEO and GEO for car dealers: free AI Visibility Scan and plans', spa: true },
+  // Paid ads + AI commercials for car dealers (the third Services entry; the URL lives in shared/paid-ads-route.js).
+  paidAds:     { key: 'paidAds',     path: PAID_ADS_PATH,                               anchor: 'Meta ads and AI commercials for car dealers: free commercial, plans', spa: true },
   aiChat:     { key: 'aiChat',     path: '/ai-chat-for-car-dealers/',                  anchor: 'AI chat for car dealers — the honest guide' },
   photoEditor:{ key: 'photoEditor',path: '/ai-car-photo-editor/',                      anchor: 'AI car photo editor for dealers' },
   rvDealers:  { key: 'rvDealers',  path: '/rv-dealer-software/',                       anchor: 'RV dealer software for Facebook Marketplace' },

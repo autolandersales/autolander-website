@@ -1,0 +1,68 @@
+/*
+ * /meta-ads-for-car-dealers/ only (paid ads + AI commercials). Loaded by the lazy PaidAdsApp chunk, never by the
+ * homepage.
+ *
+ * Isolation contract: src/index.css carries `@source not "./ads"`, so nothing under src/ads adds a single rule
+ * to the homepage stylesheet (it stays byte-identical). This file builds the utilities the page needs on its
+ * own. Fonts, preflight and the base body styles come from index.css, which every route already loads.
+ *
+ * Cascade: like src/team/team.css, the page's utilities live in a later layer, `ads`, which nothing in a
+ * re-appended `utilities` layer can outrank.
+ */
+@layer theme, base, components, utilities, ads;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(ads) source(none);
+@source "./";
+@source "../components/ResponsiveImage.jsx";
+@source "../components/StaticIsland.jsx";
+@source "../lib/";
+@source "../../shared/responsive-images.js";
+@source "../../shared/page-images.js";
+@source "../../shared/responsive-image-manifest.json";
+@source "../../shared/tracking-scope.js";
+@source "../../shared/meta-signal.js";
+@source "../../shared/paid-ads-content.js";
+@source "../../shared/paid-ads-form.js";
+@source "../../shared/paid-ads-route.js";
+@source "../../shared/ai-scan-form.js";
+@source "../../shared/ai-visibility-route.js";
+@source "../components/SiteNav.jsx";
+@source "../components/SiteFooter.jsx";
+
+/* Same tokens as index.css, so font-display / font-mono resolve identically. */
+@theme {
+  --font-sans: 'Inter', 'Inter Fallback', 'Inter Fallback Roboto', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Archivo', 'Archivo Fallback', 'Archivo Fallback Roboto', 'Inter', 'Inter Fallback', 'Inter Fallback Roboto', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+/* The site's "posting beam" divider (the --beam token lives on :root in index.css). */
+.ads-beam {
+  height: 1px;
+  background: var(--beam);
+  opacity: 0.7;
+}
+
+/* Phone speed: the long page below the method renders only as it nears the screen. */
+#method ~ section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* The static island below the hero (the build-time mirror, until the page goes live). */
+[data-al-island] > section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* A link to a spot inside the island (#apply-form, a ?sent=1#apply-form return) lays the whole island out. */
+[data-al-island]:has(:target) > section {
+  content-visibility: visible;
+}
+
+/* Phones: a focused control is never hidden under the sticky apply bar. */
+@media (max-width: 767px) {
+  html {
+    scroll-padding-bottom: 7rem;
+  }
+}

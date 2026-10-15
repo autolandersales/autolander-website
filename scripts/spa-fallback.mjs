@@ -9,8 +9,12 @@ import { AI_VISIBILITY_DIR, AI_VISIBILITY_LEGACY_PATHS, AI_VISIBILITY_PATH } fro
 import { HEADLINES, TEAM_META } from '../shared/team-content.js';
 import { renderAiVisibilityMirrorRest } from '../src/ai/static-mirror.js';
 import { renderTeamMirrorRest } from '../src/team/static-mirror.js';
+import { renderPaidAdsMirrorRest } from '../src/ads/static-mirror.js';
+import { HEADLINES as PAID_ADS_HEADLINES, META as PAID_ADS_META } from '../shared/paid-ads-content.js';
+import { PAID_ADS_DIR } from '../shared/paid-ads-route.js';
 import { aiVisibilityHead, aiVisibilityLegacyStubHtml } from './seo/data-ai-visibility.mjs';
 import { teamHead } from './seo/data-team.mjs';
+import { paidAdsHead } from './seo/data-paid-ads.mjs';
 import { cleanSsr, loadPrerender } from './prerender.mjs';
 import {
   appendBeaconLoader,
@@ -180,6 +184,16 @@ prerenderedRoute('src/team/TeamApp.jsx', {
   island: 'team-rest',
   h1Text: HEADLINES.a,
   rootHtml: prerender.renderTeam({ restHtml: renderTeamMirrorRest(), variant: 'a' }),
+});
+
+prerenderedRoute('src/ads/PaidAdsApp.jsx', {
+  dir: PAID_ADS_DIR,
+  title: PAID_ADS_META.title,
+  headHtml: paidAdsHead({ preview }),
+  hydrate: 'paid-ads',
+  island: 'ads-rest',
+  h1Text: PAID_ADS_HEADLINES.a,
+  rootHtml: prerender.renderPaidAds({ restHtml: renderPaidAdsMirrorRest({ capiUrl }), variant: 'a' }),
 });
 
 prerenderedRoute('src/ai/AiVisibilityApp.jsx', {

@@ -1,4 +1,5 @@
 import { AI_VISIBILITY_PATH } from '../../shared/ai-visibility-route.js';
+import { PAID_ADS_PATH } from '../../shared/paid-ads-route.js';
 
 /**
  * Boot selection for the prerendered marketing routes.
@@ -12,6 +13,7 @@ import { AI_VISIBILITY_PATH } from '../../shared/ai-visibility-route.js';
 export function pickBoot(attr, pathname) {
   if (attr === 'ai-visibility' && (pathname === AI_VISIBILITY_PATH || pathname === AI_VISIBILITY_PATH.slice(0, -1))) return 'ai-visibility';
   if (attr === 'team' && /^\/team\/?$/.test(pathname)) return 'team';
+  if (attr === 'paid-ads' && (pathname === PAID_ADS_PATH || pathname === PAID_ADS_PATH.slice(0, -1))) return 'paid-ads';
   return 'spa';
 }
 
