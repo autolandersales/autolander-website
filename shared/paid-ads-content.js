@@ -15,11 +15,13 @@
 //   * `export const` data and pure helpers only; no side effects at module scope;
 //   * no JSX, no class names, no window / document / import.meta;
 //   * copy: no em or en dashes, no "not X. It's Y." cadence, no hype words, no competitor names, no result
-//     promises; the only dollar figures are the ad-budget bands (the dealer's spend, never our fee) and the PROOF line.
+//     promises; the only dollar figures are the ad-budget bands (the dealer's spend, never our fee).
 //
-// PROOF RULE: every number on this page is AutoLander's own Meta account (first party), dated, and described as
-// what happened for us, never as a forecast for the dealer. Claims registry rows CLM-PROOF-001 (dealerships),
-// CLM-ADS-001 (the best commercial), CLM-ADS-002 (ads tested since May).
+// PROOF RULE (Michael 2026-10-16): no ad-performance figure from our own account appears on this page: no
+// application counts, cost per lead or application, hook rates, daily spend or exact test counts. Competitors read
+// this page, and a dealer must never read our result as a forecast for theirs. Proof is the dealership count
+// (CLM-PROOF-001), the best commercial (CLM-ADS-001, "beat everything else we tested") and "hundreds" of ads
+// tested since May (CLM-ADS-002), all described as AutoLander's own business.
 
 import { PAID_ADS_PATH, PAID_ADS_FORM_ID } from './paid-ads-route.js';
 
@@ -46,22 +48,20 @@ export function fmtUsd(n) {
   return `$${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 }
 
-// ---------- first-party proof (AutoLander's own ad account; see PROOF RULE above) ----------
+// ---------- first-party proof (AutoLander's own business; see PROOF RULE above: no ad-performance figures) ----------
 export const PROOF = {
-  eyebrow: 'Our own numbers',
+  eyebrow: 'Our own money first',
   h2Lead: 'We run ads this way',
   h2Grad: 'for AutoLander every day.',
-  lead: 'Everything on this page is how we grew our own software company on Facebook and Instagram. We do not sell a method we have not paid for ourselves.',
-  // Dates and figures: AutoLander's Meta ad account and CRM, read in Ads Manager on 2026-10-06 (the commercial) and
-  // 2026-10-15 (the rest). Spend to Meta, applications as counted by Meta, dealerships as paying accounts.
-  window: 'September 7 to October 6, 2026',
+  lead: 'Everything on this page is how we grow our own software company on Facebook and Instagram, with our own budget on the line. A tactic reaches your account only after it has earned its keep in ours.',
+  // Dealerships = paying accounts on 2026-10-05; "100s" = the 240+ variations in our Meta account since May.
   stats: [
-    { value: '447', label: 'demo applications from one 31-second commercial', detail: 'under $22 each, in 30 days' },
     { value: '200+', label: 'dealerships run AutoLander', detail: 'paying accounts, counted on October 5, 2026' },
-    { value: '240+', label: 'ad variations we have tested since May', detail: 'one of them became the winner above' },
-    { value: '1', label: 'ad account: our own', detail: 'the same account, data and tracking we would set up for you' },
+    { value: '100s', label: 'of ad variations tested on our own budget since May', detail: 'we pay for the lessons before your store does' },
+    { value: '1', label: 'commercial beat every one of them', detail: 'watch “Slow Day” below' },
+    { value: '0', label: 'tactics we sell that we have not run on our own money first', detail: 'the same account setup, data and tracking we build for you' },
   ],
-  caption: 'Numbers from AutoLander’s own Meta ad account and CRM, September 7 to October 6, 2026, as read in Ads Manager. They are what happened for our software company. They are not a forecast or a promise of what your store will get.',
+  caption: 'Everything in this section is about AutoLander’s own business and its own ad account. It is not a forecast or a promise of what your store will get. Your market, inventory, offer and budget decide that, and your Monday readout shows you the real numbers every week.',
 };
 
 // ---------- hero (two headline variants, one per ad angle: a = free commercial, b = ad review) ----------
@@ -90,7 +90,7 @@ export const SUBS = {
 export const HERO = {
   cta: 'Apply for my free commercial',
   ctaB: 'Apply for my free ad review',
-  watch: 'Watch the commercial that did it',
+  watch: 'Watch our best-performing commercial',
   watchNote: '31 seconds',
   formNote: 'About two minutes. We read every application by hand and reply within 1 business day.',
   chips: [
@@ -113,7 +113,7 @@ export const PROBLEM = {
   items: [
     { title: 'Templates sold to every store', body: 'When your ad is the same template as the lot across town, the only thing left to compete on is price. That is a race you cannot win with a bigger budget.' },
     { title: 'Nobody makes real creative', body: 'The agency has 40 accounts. Your “creative” is a feed and a font. Meta rewards ads people watch, and nobody watches a feed.' },
-    { title: 'The same ad for six months', body: 'Every ad wears out. We watched our own best ad go from a 39% hook rate to 29% in two weeks. Without a fresh commercial on deck, the cost per lead only goes one way.' },
+    { title: 'The same ad for six months', body: 'Every ad wears out, and faster than most stores think. We watch our own winners lose their thumb-stop power within weeks. Without a fresh commercial on deck, the cost per lead only goes one way.' },
     { title: 'A report nobody can act on', body: 'Clicks, reach and “engagement” do not sell cars. You need the cost of a lead with a name and a phone number, and which ad produced it.' },
   ],
 };
@@ -123,7 +123,7 @@ export const METHOD = {
   eyebrow: 'Our specific way',
   h2Lead: 'A commercial, a system,',
   h2Grad: 'and a Monday readout.',
-  lead: 'This is the exact process behind the numbers above, run for your dealership instead of ours.',
+  lead: 'This is the exact process we run on our own ad account every day, pointed at your dealership instead of ours.',
   steps: [
     { title: 'The angle', body: 'We study your store, your market and your buyers: what the lot looks like at 2 PM on a Tuesday, who walks in, who never does. Then we write five hooks for your commercial and keep the one your buyers will feel in the first second.' },
     { title: 'The commercial', body: 'A scripted 30-second story, cast and filmed with AI tools, cut in 9:16 for Reels and 4:5 for the feed, captioned for sound-off viewing. Your real store, cars and people when you have footage, synthetic actors in a written story when you do not. Never a stock-photo carousel.' },
@@ -173,9 +173,9 @@ export const FIT = {
 export const COMMERCIAL = {
   anchor: 'commercial',
   eyebrow: 'Watch the work',
-  h2Lead: 'The commercial that brought in',
-  h2Grad: '447 demo applications.',
-  body: 'This is “Slow Day”, written, cast and cut in our studio in one week, run on one broad ad set at a few hundred dollars a day. A dead showroom, one salesperson with a buyer waiting, and a product that did the posting. It stopped the scroll because it is a story, not a sales pitch. We write the same way for your store.',
+  h2Lead: 'The commercial that outperformed',
+  h2Grad: 'everything else we tested.',
+  body: 'This is “Slow Day”, written, cast and cut in our studio in one week and run on a single broad ad set. A dead showroom, one salesperson with a buyer waiting, and a product that did the posting. It stopped the scroll because it is a story, not a sales pitch. We write the same way for your store.',
   play: 'Play the commercial',
   playing: 'Playing',
   duration: '31 sec',

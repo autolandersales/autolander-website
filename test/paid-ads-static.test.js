@@ -72,19 +72,19 @@ test('content module keeps the public copy rules, the three plans and first-part
       assert.match(match[0], /\b(?:no one|nobody|can’t|cannot|never|do not|steps we control|promised number)\b/i, `${item.q}: ${match[0]}`);
     }
   }
-  // No fee or plan price on the page (Romeo 10-15): the only dollar figures are the dealer's ad-budget bands and the proof line.
+  // No fee or plan price on the page (Romeo 10-15): the only dollar figures are the dealer's ad-budget bands.
   for (const plan of PLANS) for (const key of ['monthly', 'setup', 'minSpend', 'price']) assert.ok(!(key in plan), `${plan.name}.${key}`);
   const budgetTokens = new Set([...AD_BUDGET_CHOICES.join(' ').matchAll(/\$\d{1,3}(?:,\d{3})*/g)].map((m) => m[0]));
   const dollarTokens = new Set(copy.match(/\$\d{1,3}(?:,\d{3})*/g) || []);
-  for (const token of dollarTokens) assert.ok(budgetTokens.has(token) || token === '$22', `${token} must be an ad-budget band or the under-$22 proof line`);
+  for (const token of dollarTokens) assert.ok(budgetTokens.has(token), `${token} must be an ad-budget band`);
   assert.doesNotMatch(copy, /\b(?:a month plus|one-time setup|per month|\/mo)\b/i);
-  // The proof block is dated and disclaimed as our own account, never a forecast.
-  assert.match(PROOF.caption, /AutoLander’s own Meta ad account/);
+  // No ad-performance figures from our own account (Michael 10-16): competitors read this page, and a dealer must
+  // never read our result as a forecast for theirs. No application counts, cost per lead, hook rates, spend, test counts.
+  assert.doesNotMatch(copy, /\d\s?%/, 'no percentages');
+  assert.doesNotMatch(copy, /\b447\b|\b240\b|hundred dollars|demo applications/i);
   assert.match(PROOF.caption, /not a forecast or a promise/);
-  assert.match(PROOF.window, /September 7 to October 6, 2026/);
-  assert.equal(PROOF.stats[0].value, '447');
-  assert.equal(PROOF.stats[1].value, '200+');
-  assert.equal(PROOF.stats[2].value, '240+');
+  assert.equal(PROOF.stats[0].value, '200+');
+  assert.ok(PROOF.stats.slice(1).every((stat) => !/^\d{2,}\+?$/.test(stat.value)), 'only the dealership count is an exact figure');
 });
 
 test('title, description and headline fit the page contract', () => {

@@ -32,7 +32,7 @@ import {
 /**
  * Presentational sections for /meta-ads-for-car-dealers/ (paid ads + AI commercials for dealer owners and GMs).
  * Logic-free apart from the commercial player; the application form, tracking and routing live in PaidAdsApp.jsx.
- * Every number here comes from shared/paid-ads-content.js PROOF / PLANS (AutoLander's own account, dated).
+ * Every number here comes from shared/paid-ads-content.js PROOF / PLANS (no ad-performance figures; see its PROOF RULE).
  */
 
 // Hosted media (public/paid-ads/): the 31-second commercial and a muted 6-second loop for the hero phone.
