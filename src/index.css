@@ -1,6 +1,8 @@
 @import "tailwindcss";
 /* The /team landing page builds its own stylesheet (src/team/team.css); keep it out of this one. */
 @source not "./team";
+/* The paid ads landing page builds its own stylesheet too (src/ads/ads.css). */
+@source not "./ads";
 /* Same for the AEO and GEO page, /aeo-geo-for-car-dealers/ (src/ai/ai.css). */
 @source not "./ai";
 

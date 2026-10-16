@@ -6,8 +6,9 @@ import test from 'node:test';
 import { AI_VISIBILITY_IMAGES } from '../shared/ai-images.js';
 import { FORM, FOOTER, WHERE_BUYERS_ASK } from '../shared/ai-visibility-content.js';
 import { AI_VISIBILITY_DIR } from '../shared/ai-visibility-route.js';
+import { PAID_ADS_DIR } from '../shared/paid-ads-route.js';
 import { assertClassCoverage } from '../scripts/route-css.mjs';
-import { renderAiVisibility, renderTeam } from './helpers/route-render.js';
+import { renderAiVisibility, renderTeam, renderPaidAds } from './helpers/route-render.js';
 import { HTMLParser } from './helpers/html-text.js';
 
 const read = (path) => readFileSync(path, 'utf8');
@@ -16,7 +17,9 @@ const allowlist = JSON.parse(read('scripts/route-css-allowlist.json'));
 
 test('route shells carry covered inline CSS and preserve full CSS on the shared shells', { skip: !hasDist }, () => {
   // [dist dir, hydrate id]: the AEO and GEO page lives at AI_VISIBILITY_DIR but keeps its internal id.
-  for (const [dir, route] of [['team', 'team'], [AI_VISIBILITY_DIR, 'ai-visibility']]) {
+  const liveRender = { team: renderTeam, 'ai-visibility': renderAiVisibility, 'paid-ads': renderPaidAds };
+  const entryName = { team: 'TeamApp', 'ai-visibility': 'AiVisibilityApp', 'paid-ads': 'PaidAdsApp' };
+  for (const [dir, route] of [['team', 'team'], [AI_VISIBILITY_DIR, 'ai-visibility'], [PAID_ADS_DIR, 'paid-ads']]) {
     const html = read(`dist/${dir}/index.html`);
     const styles = [...html.matchAll(/<style data-inline-route-css>([\s\S]*?)<\/style>/g)];
     assert.equal(styles.length, 1, route);
@@ -24,17 +27,17 @@ test('route shells carry covered inline CSS and preserve full CSS on the shared 
     // Vite's preload helper from re-downloading the inlined route CSS.
     const cssLinks = [...html.matchAll(/<link\b[^>]*rel="stylesheet"[^>]*>/g)].map((m) => m[0]);
     assert.equal(cssLinks.length, 1, `${route}: one route CSS placeholder`);
-    assert.match(cssLinks[0], /href="\/assets\/(TeamApp|AiVisibilityApp)-[\w-]+\.css" disabled data-al-inlined-css/);
+    assert.match(cssLinks[0], new RegExp(`href="/assets/${entryName[route]}-[\\w-]+\\.css" disabled data-al-inlined-css`));
     // Nothing is preloaded at parse time: the post-paint loader requests the route chunk and its static imports.
     assert.doesNotMatch(html, /<link rel="modulepreload"/, `${route}: no parse-time modulepreload`);
     const preloads = (html.match(/<script data-al-boot[^>]*data-al-preload="([^"]+)"/)?.[1] || '').split(' ');
-    assert.match(preloads[0], route === 'team' ? /^\/assets\/TeamApp-[\w-]+\.js$/ : /^\/assets\/AiVisibilityApp-[\w-]+\.js$/);
+    assert.match(preloads[0], new RegExp(`^/assets/${entryName[route]}-[\\w-]+\\.js$`));
     assert.ok(preloads.some((href) => /\/assets\/SiteFooter-/.test(href)), `${route}: SiteFooter chunk preloaded`);
     assert.ok(!preloads.some((href) => /\/assets\/index-/.test(href)), `${route}: entry chunk is not preloaded twice`);
     for (const href of preloads) assert.ok(existsSync(`dist${href}`), `${route}: ${href} exists`);
     const root = html.match(/<!--AL_STATIC_PAGE_START-->([\s\S]*?)<!--AL_STATIC_PAGE_END-->/)[1];
     assertClassCoverage(root, styles[0][1], allowlist);
-    assertClassCoverage(route === 'team' ? renderTeam() : renderAiVisibility(), styles[0][1], allowlist);
+    assertClassCoverage(liveRender[route](), styles[0][1], allowlist);
   }
   assert.equal(existsSync('dist/.vite'), false);
   for (const route of ['index.html', '404.html', 'admin/index.html', 'pay/index.html']) {
@@ -65,7 +68,7 @@ test('team static JS import closure contains no AI page copy or AI image descrip
 });
 
 test('prerendered routes ship React markup in #root, the mirror as one island, and boot after the first paint', { skip: !hasDist }, () => {
-  for (const [dir, route, island] of [['team', 'team', 'team-rest'], [AI_VISIBILITY_DIR, 'ai-visibility', 'ai-rest']]) {
+  for (const [dir, route, island] of [['team', 'team', 'team-rest'], [AI_VISIBILITY_DIR, 'ai-visibility', 'ai-rest'], [PAID_ADS_DIR, 'paid-ads', 'ads-rest']]) {
     const html = read(`dist/${dir}/index.html`);
     // Hydration adopts #root's children, so React's first element must be #root's first child (no whitespace).
     assert.match(html, new RegExp(`<!--AL_STATIC_PAGE_START--><div id="root" data-al-hydrate="${route}"><div class="min-h-dvh`));

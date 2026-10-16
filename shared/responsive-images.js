@@ -8,6 +8,8 @@ export const IMAGE_SIZES = {
   teamHero: '(min-width: 1280px) 566px, (min-width: 1024px) calc(47.5vw - 42px), calc(100vw - 48px)',
   teamAutopilot: '(min-width: 944px) 896px, calc(100vw - 48px)',
   teamDashboard: '(min-width: 1280px) 814px, (min-width: 1024px) calc(67.5vw - 49px), calc(100vw - 48px)',
+  adsPoster: '(min-width: 1024px) 340px, min(100vw - 48px, 340px)',
+  adsClose: '(min-width: 1024px) 388px, min(100vw - 80px, 328px)',
   teamAccess: '(min-width: 1280px) 735px, (min-width: 1024px) calc(64vw - 84px), (min-width: 640px) calc(100vw - 106px), calc(100vw - 90px)',
 };
 

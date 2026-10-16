@@ -21,6 +21,7 @@
 @source "../../shared/meta-signal.js";
 @source "../../shared/ai-visibility-content.js";
 @source "../../shared/ai-visibility-route.js";
+@source "../../shared/paid-ads-route.js";
 @source "../../shared/ai-scan-form.js";
 @source "../../shared/ai-images.js";
 @source "../components/SiteNav.jsx";

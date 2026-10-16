@@ -11,6 +11,7 @@ const SECTION_LINKS = [
 const SERVICES = [
   ['/aeo-geo-for-car-dealers/', 'AEO & GEO'],
   ['/team/', 'Team Plans'],
+  ['/meta-ads-for-car-dealers/', 'Paid Ads & AI Commercials'],
 ];
 
 const navLinkClass = 'text-xs font-semibold text-slate-400 transition-all hover:text-white lg:text-sm';
@@ -53,6 +54,9 @@ export default function SiteNav({
   const mobileMenuId = `${idPrefix}-mobile-menu`;
   const isHome = page === 'home';
   const isAiVisibility = page === 'ai-visibility';
+  const isPaidAds = page === 'paid-ads';
+  // Pages whose primary action is an in-page form: a real link, so it works before hydration and without JS.
+  const primaryHref = isAiVisibility ? '#scan-form' : isPaidAds ? '#apply-form' : '';
   const desktopServicesOpen = desktopServicesHovered || desktopServicesPinned;
 
   const closeMenus = () => {
@@ -88,12 +92,14 @@ export default function SiteNav({
 
   const primaryLabel = isAiVisibility
     ? 'Get my free scan'
+    : isPaidAds
+      ? 'Apply now'
     : page === 'team'
       ? 'Book Team Demo'
       : 'Book Demo';
 
   const primaryClass = 'whitespace-nowrap rounded-xl bg-white px-3 py-2 text-xs font-bold text-black shadow-lg transition-all hover:bg-blue-500 hover:text-white active:scale-95 sm:px-4 sm:py-2.5 md:px-2 lg:px-4 lg:text-sm xl:px-6';
-  const demoIntentHandlers = isAiVisibility ? {} : {
+  const demoIntentHandlers = primaryHref ? {} : {
     'data-demo-application-trigger': 'true',
     onPointerEnter: onPrimaryWarm,
     onPointerDown: onPrimaryAction,
@@ -161,7 +167,7 @@ export default function SiteNav({
               id={desktopServicesId}
               role="menu"
               aria-hidden={!desktopServicesOpen}
-              className={`absolute left-1/2 top-full w-44 -translate-x-1/2 pt-3 transition ${desktopServicesOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
+              className={`absolute left-1/2 top-full w-56 -translate-x-1/2 pt-3 transition ${desktopServicesOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
             >
               <div className="rounded-2xl border border-white/10 bg-black/80 p-2 shadow-2xl shadow-black/60 backdrop-blur-xl">
                 <ServiceLinks onNavigate={closeMenus} />
@@ -193,7 +199,7 @@ export default function SiteNav({
               id={mobileMenuId}
               role="menu"
               aria-hidden={!mobileMenuOpen}
-              className={`absolute right-0 top-full w-44 pt-3 transition ${mobileMenuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
+              className={`absolute right-0 top-full w-56 pt-3 transition ${mobileMenuOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
             >
               <div className="rounded-2xl border border-white/10 bg-black/90 p-2 shadow-2xl shadow-black/60 backdrop-blur-xl">
                 <a href="/blog/" onClick={closeMenus} className={menuLinkClass} role="menuitem">Blog</a>
@@ -224,7 +230,7 @@ export default function SiteNav({
               id={mobileServicesId}
               role="menu"
               aria-hidden={!mobileServicesOpen}
-              className={`absolute right-0 top-full w-44 pt-3 transition ${mobileServicesOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
+              className={`absolute right-0 top-full w-56 pt-3 transition ${mobileServicesOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'}`}
             >
               <div className="rounded-2xl border border-white/10 bg-black/90 p-2 shadow-2xl shadow-black/60 backdrop-blur-xl">
                 <ServiceLinks onNavigate={closeMenus} />
@@ -242,8 +248,8 @@ export default function SiteNav({
             </button>
           )}
 
-          {isAiVisibility ? (
-            <a href="#scan-form" onClick={onPrimaryAction} className={primaryClass}>{primaryLabel}</a>
+          {primaryHref ? (
+            <a href={primaryHref} onClick={onPrimaryAction} className={primaryClass}>{primaryLabel}</a>
           ) : (
             <button
               type="button"

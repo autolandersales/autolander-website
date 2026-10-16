@@ -7,3 +7,7 @@ export const TEAM_IMAGES = {
   access: imageFromSlot({ image: 'team-access', alt: 'AutoLander Team Access screen with posting seats and Manager Dashboard access set per person, with names hidden' }),
   autopilot: imageFromSlot({ image: 'autopilot', alt: 'AutoLander AutoPilot controls for scheduling Marketplace vehicle posts' }),
 };
+export const ADS_IMAGES = {
+  poster: imageFromSlot({ image: 'commercial-poster', alt: 'A frame of AutoLander’s Slow Day commercial: a salesperson in a showroom, captioned, as it runs on Facebook and Instagram Reels' }),
+  close: imageFromSlot({ image: 'commercial-close', alt: 'The closing frame of the Slow Day commercial: a salesperson hands keys to a buyer in a showroom' }),
+};

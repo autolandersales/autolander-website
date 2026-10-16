@@ -165,5 +165,25 @@
       1280,
       1600
     ]
+  },
+  "commercial-poster": {
+    "base": "/paid-ads/commercial-poster",
+    "src": "/paid-ads/commercial-poster-1600.webp",
+    "width": 1080,
+    "height": 1920,
+    "widths": [
+      640,
+      960
+    ]
+  },
+  "commercial-close": {
+    "base": "/paid-ads/commercial-close",
+    "src": "/paid-ads/commercial-close-1600.webp",
+    "width": 1080,
+    "height": 1920,
+    "widths": [
+      640,
+      960
+    ]
   }
 }

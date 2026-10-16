@@ -2,6 +2,8 @@
 //   POST /api/apply -> validate lead, upsert contact in GHL, add to workflow,
 //                      send the verified server Lead event, mint thank-you token.
 //   POST /api/ai-scan -> store a scan request, then best-effort CRM + AIScanRequest.
+//   POST /api/ads-apply -> the paid ads page's application: the same pipeline (store, CRM, Meta) under its own
+//                         profile (PAID_ADS_PROFILE): KV prefix ads_apply, tag paid-ads-request, PaidAdsApplication.
 //
 // The browser never sees the GHL token. Lead is sent only by this backend;
 // legacy confirmation tokens remain available for cached clients.
@@ -40,6 +42,13 @@ import {
   MARKETPLACE_ROUTE,
   SMS_CONSENT,
 } from '../../../shared/ai-scan-form.js';
+import {
+  AD_BUDGET_CHOICES,
+  ADS_TODAY_CHOICES,
+  PAID_ADS_SMS_CONSENT,
+  UNITS_CHOICES,
+} from '../../../shared/paid-ads-form.js';
+import { PAID_ADS_API_PATH, PAID_ADS_FORM_ID, PAID_ADS_PATH } from '../../../shared/paid-ads-route.js';
 
 const ROLE_CHOICES = ['Owner', 'Manager', 'Sales Rep'];
 const VEHICLE_COUNT_CHOICES = ['1-50', '51-150', '151+'];
@@ -54,6 +63,64 @@ const AI_SCAN_SUBMISSION_PATTERN = /^sub_[a-z0-9_-]{12,80}$/i;
 // The no-JS form's 303 targets: the page's current URL, so a native POST lands in one hop.
 const AI_SCAN_FORM_SUCCESS_URL = `https://autolander.ai${AI_VISIBILITY_PATH}?sent=1#scan-form`;
 const AI_SCAN_FORM_ERROR_URL = `https://autolander.ai${AI_VISIBILITY_PATH}?error=`;
+
+// One pipeline, two forms. The AEO page's free scan (/api/ai-scan) and the paid ads page's application
+// (/api/ads-apply) share the store -> CRM -> Meta flow in handleAiScan; a profile carries everything that differs
+// (storage and rate-limit key prefixes, the no-JS redirects, the role and choice lists, the consent text, the CRM
+// source, tags and note title, and the Meta event). AI_SCAN_PROFILE is the default everywhere, so the scan route
+// behaves exactly as before.
+const AI_SCAN_PROFILE = {
+  id: 'ai-scan',
+  log: '[api/ai-scan]',
+  kv: 'ai_scan',
+  rate: 'ai_scan',
+  eventIdPrefix: 'aiscan',
+  eventIdSalt: 'ai-scan',
+  successUrl: AI_SCAN_FORM_SUCCESS_URL,
+  errorUrl: AI_SCAN_FORM_ERROR_URL,
+  anchor: '#scan-form',
+  killSwitch: 'AI_SCAN_PUBLIC_ROUTE',
+  capiSwitch: 'SEND_WORKER_AI_SCAN_CAPI',
+  roles: AI_SCAN_ROLE_CHOICES,
+  consent: SMS_CONSENT,
+  extra: [],
+  crmSource: 'AutoLander AI Visibility scan',
+  tag: 'ai-scan-request',
+  smsTag: 'ai-scan-sms-ok',
+  noteTitle: 'AutoLander AI Visibility scan request',
+  eventName: 'AIScanRequest',
+  eventSource: 'ai_visibility_scan',
+  customData: { content_name: 'ai_visibility_scan_requested', content_category: 'ai_visibility' },
+};
+// Extra required choice fields are validated in this order (after the store fields, before the person's).
+const PAID_ADS_PROFILE = {
+  id: 'paid-ads',
+  log: '[api/ads-apply]',
+  kv: 'ads_apply',
+  rate: 'ads_apply',
+  eventIdPrefix: 'adsapply',
+  eventIdSalt: 'ads-apply',
+  successUrl: `https://autolander.ai${PAID_ADS_PATH}?sent=1#${PAID_ADS_FORM_ID}`,
+  errorUrl: `https://autolander.ai${PAID_ADS_PATH}?error=`,
+  anchor: `#${PAID_ADS_FORM_ID}`,
+  killSwitch: 'PAID_ADS_PUBLIC_ROUTE',
+  capiSwitch: 'SEND_WORKER_PAID_ADS_CAPI',
+  roles: AI_SCAN_ROLE_CHOICES,
+  consent: PAID_ADS_SMS_CONSENT,
+  extra: [
+    { key: 'unitsPerMonth', label: 'Units sold a month', choices: UNITS_CHOICES, reason: 'missing_units' },
+    { key: 'adBudget', label: 'Monthly ad budget', choices: AD_BUDGET_CHOICES, reason: 'missing_ad_budget' },
+    { key: 'adsToday', label: 'Ads today', choices: ADS_TODAY_CHOICES, reason: 'missing_ads_today' },
+  ],
+  crmSource: 'AutoLander Paid Ads application',
+  tag: 'paid-ads-request',
+  smsTag: 'paid-ads-sms-ok',
+  noteTitle: 'AutoLander paid ads application (free commercial or ad review)',
+  eventName: 'PaidAdsApplication',
+  eventSource: 'paid_ads_application',
+  customData: { content_name: 'paid_ads_application_requested', content_category: 'paid_ads' },
+};
+export const LEAD_FORM_PROFILES = { aiScan: AI_SCAN_PROFILE, paidAds: PAID_ADS_PROFILE };
 const GHL_BASE_URL = 'https://services.leadconnectorhq.com';
 const GHL_VERSION = '2021-07-28';
 
@@ -171,7 +238,11 @@ export async function handleBooking(request, env, corsHeaders, ctx) {
   }
 
   if (url.pathname === '/api/ai-scan' && request.method === 'POST') {
-    return handleAiScan(request, env, corsHeaders, ctx);
+    return handleAiScan(request, env, corsHeaders, ctx, AI_SCAN_PROFILE);
+  }
+
+  if (url.pathname === PAID_ADS_API_PATH && request.method === 'POST') {
+    return handleAiScan(request, env, corsHeaders, ctx, PAID_ADS_PROFILE);
   }
 
   if (url.pathname === '/api/availability' || url.pathname === '/api/book') {
@@ -214,10 +285,10 @@ export async function syncAvailability() {
   return { ok: true, disabled: true };
 }
 
-async function handleAiScan(request, env, corsHeaders, ctx) {
+async function handleAiScan(request, env, corsHeaders, ctx, profile = AI_SCAN_PROFILE) {
   const formMode = isAiScanFormRequest(request);
-  if (env.AI_SCAN_PUBLIC_ROUTE === 'off') {
-    return aiScanFailure('unavailable', 503, corsHeaders, formMode);
+  if (env[profile.killSwitch] === 'off') {
+    return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
   }
 
   const body = await parseAiScanBody(request, formMode);
@@ -235,16 +306,16 @@ async function handleAiScan(request, env, corsHeaders, ctx) {
     }
     let replay;
     try {
-      replay = await readAiScanRequest(env, submissionId);
+      replay = await readAiScanRequest(env, submissionId, profile);
     } catch {
-      return aiScanFailure('unavailable', 503, corsHeaders, formMode);
+      return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
     }
     const saved = savedAiScanResponse(replay);
-    if (saved) return aiScanSuccess(saved, true, corsHeaders, formMode);
+    if (saved) return aiScanSuccess(saved, true, corsHeaders, formMode, profile);
 
     const receivedAt = new Date().toISOString();
-    const eventId = await aiScanEventId(submissionId);
-    const fields = await collectAiScanFields(body, request, env, formMode, receivedAt);
+    const eventId = await aiScanEventId(submissionId, profile);
+    const fields = await collectAiScanFields(body, request, env, formMode, receivedAt, profile);
     const response = { ok: true, duplicate: false, submissionId, eventId };
     const record = buildAiScanRecord({
       fields,
@@ -255,9 +326,9 @@ async function handleAiScan(request, env, corsHeaders, ctx) {
       crm: 'skipped',
       response,
     });
-    const committed = await commitAiScanRequest(env, record);
-    if (!committed) return aiScanFailure('unavailable', 503, corsHeaders, formMode);
-    return aiScanSuccess(response, false, corsHeaders, formMode);
+    const committed = await commitAiScanRequest(env, record, profile);
+    if (!committed) return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
+    return aiScanSuccess(response, false, corsHeaders, formMode, profile);
   }
 
   // A salesperson after AutoLander's Facebook Marketplace posting software is not a scan lead (Michael,
@@ -269,29 +340,30 @@ async function handleAiScan(request, env, corsHeaders, ctx) {
   }
 
   if (!AI_SCAN_SUBMISSION_PATTERN.test(submissionId)) {
-    return aiScanFailure('invalid_submission', 400, corsHeaders, formMode);
+    return aiScanFailure('invalid_submission', 400, corsHeaders, formMode, profile);
   }
 
   let replay;
   try {
-    replay = await readAiScanRequest(env, submissionId);
+    replay = await readAiScanRequest(env, submissionId, profile);
   } catch {
-    return aiScanFailure('unavailable', 503, corsHeaders, formMode);
+    return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
   }
   const saved = savedAiScanResponse(replay);
-  if (saved) return aiScanSuccess(saved, true, corsHeaders, formMode);
+  if (saved) return aiScanSuccess(saved, true, corsHeaders, formMode, profile);
 
   const limited = await enforceApplyRateLimit(request, env, {
     aiScanEmail: clean(body.email, 160),
+    rateKeyPrefix: profile.rate,
   });
-  if (!limited.ok) return aiScanFailure('rate_limited', 429, corsHeaders, formMode);
+  if (!limited.ok) return aiScanFailure('rate_limited', 429, corsHeaders, formMode, profile);
 
   const receivedAt = new Date().toISOString();
-  const fields = await collectAiScanFields(body, request, env, formMode, receivedAt);
-  const invalidReason = validateAiScanFields(fields);
-  if (invalidReason) return aiScanFailure(invalidReason, 400, corsHeaders, formMode);
+  const fields = await collectAiScanFields(body, request, env, formMode, receivedAt, profile);
+  const invalidReason = validateAiScanFields(fields, profile);
+  if (invalidReason) return aiScanFailure(invalidReason, 400, corsHeaders, formMode, profile);
 
-  const eventId = await aiScanEventId(submissionId);
+  const eventId = await aiScanEventId(submissionId, profile);
   const response = { ok: true, duplicate: false, submissionId, eventId };
   let record = buildAiScanRecord({
     fields,
@@ -302,21 +374,21 @@ async function handleAiScan(request, env, corsHeaders, ctx) {
     crm: 'pending',
     response,
   });
-  const committed = await commitAiScanRequest(env, record);
-  if (!committed) return aiScanFailure('unavailable', 503, corsHeaders, formMode);
+  const committed = await commitAiScanRequest(env, record, profile);
+  if (!committed) return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
 
   try {
-    record = await syncAiScanRequestToCrm(env, record);
+    record = await syncAiScanRequestToCrm(env, record, profile);
   } catch {
     record = { ...record, crm: 'failed' };
   }
-  await writeAiScanRequest(env, record).catch(() => {});
+  await writeAiScanRequest(env, record, profile).catch(() => {});
 
-  await recordAiScanEvent({ request, env, ctx, record }).catch((err) => {
-    console.error('[api/ai-scan] Meta event failed', String(err?.message || err).slice(0, 120));
+  await recordAiScanEvent({ request, env, ctx, record, profile }).catch((err) => {
+    console.error(`${profile.log} Meta event failed`, String(err?.message || err).slice(0, 120));
   });
 
-  return aiScanSuccess(response, false, corsHeaders, formMode);
+  return aiScanSuccess(response, false, corsHeaders, formMode, profile);
 }
 
 function isAiScanFormRequest(request) {
@@ -351,14 +423,14 @@ function parseAiScanFormObject(value) {
   }
 }
 
-function aiScanSuccess(saved, duplicate, headers, formMode) {
-  if (formMode) return aiScanRedirect(AI_SCAN_FORM_SUCCESS_URL, headers);
+function aiScanSuccess(saved, duplicate, headers, formMode, profile = AI_SCAN_PROFILE) {
+  if (formMode) return aiScanRedirect(profile.successUrl, headers);
   return json({ ...saved, duplicate }, 200, headers);
 }
 
-function aiScanFailure(reason, status, headers, formMode) {
+function aiScanFailure(reason, status, headers, formMode, profile = AI_SCAN_PROFILE) {
   if (formMode) {
-    const location = `${AI_SCAN_FORM_ERROR_URL}${encodeURIComponent(reason)}#scan-form`;
+    const location = `${profile.errorUrl}${encodeURIComponent(reason)}${profile.anchor}`;
     return aiScanRedirect(location, headers);
   }
   return json({ ok: false, reason }, status, headers);
@@ -380,11 +452,11 @@ function newAiScanSubmissionId() {
   return `sub_${suffix}`;
 }
 
-async function aiScanEventId(submissionId) {
-  return `aiscan_${(await sha256Hex(`ai-scan:${submissionId}`)).slice(0, 32)}`;
+async function aiScanEventId(submissionId, profile = AI_SCAN_PROFILE) {
+  return `${profile.eventIdPrefix}_${(await sha256Hex(`${profile.eventIdSalt}:${submissionId}`)).slice(0, 32)}`;
 }
 
-async function collectAiScanFields(body, request, env, formMode, receivedAt) {
+async function collectAiScanFields(body, request, env, formMode, receivedAt, profile = AI_SCAN_PROFILE) {
   const parsedName = splitFullName({ fullName: body.fullName });
   const phoneInput = clean(body.phone, 40);
   const phoneNorm = normalizePhone(phoneInput);
@@ -449,11 +521,12 @@ async function collectAiScanFields(body, request, env, formMode, receivedAt) {
     smsConsent,
     ...(smsConsent ? {
       consent: {
-        text: SMS_CONSENT.text,
-        version: SMS_CONSENT.version,
+        text: profile.consent.text,
+        version: profile.consent.version,
         timestamp: normalizeIso(body.consentTimestamp) || receivedAt,
       },
     } : {}),
+    ...Object.fromEntries(profile.extra.map((field) => [field.key, clean(body[field.key], 80)])),
     userAgent: clean(body.userAgent, 500) || clean(request.headers.get('User-Agent'), 500),
     submittedVia: clean(body.submittedVia, 80),
     attribution: {
@@ -493,12 +566,15 @@ async function collectAiScanFields(body, request, env, formMode, receivedAt) {
   };
 }
 
-function validateAiScanFields(fields) {
+function validateAiScanFields(fields, profile = AI_SCAN_PROFILE) {
   if (!fields.dealershipName) return 'missing_dealership';
   if (!fields.website) return 'invalid_website';
   if (!fields.location) return 'missing_location';
+  for (const field of profile.extra) {
+    if (!field.choices.includes(fields[field.key])) return field.reason;
+  }
   if (!fields.fullName || !fields.firstName || !fields.lastName) return 'missing_full_name';
-  if (!AI_SCAN_ROLE_CHOICES.includes(fields.role)) return 'missing_role';
+  if (!profile.roles.includes(fields.role)) return 'missing_role';
   if (!isEmail(fields.email)) return 'invalid_email';
   if (!fields.phoneValid) return 'invalid_phone';
   return '';
@@ -528,23 +604,23 @@ function savedAiScanResponse(record) {
   };
 }
 
-async function readAiScanRequest(env, submissionId) {
+async function readAiScanRequest(env, submissionId, profile = AI_SCAN_PROFILE) {
   if (!env.TRACKING) throw new Error('TRACKING KV binding is missing');
   if (!submissionId) return null;
-  return env.TRACKING.get(`ai_scan:req:${submissionId}`, 'json');
+  return env.TRACKING.get(`${profile.kv}:req:${submissionId}`, 'json');
 }
 
-async function commitAiScanRequest(env, record) {
+async function commitAiScanRequest(env, record, profile = AI_SCAN_PROFILE) {
   if (!env.TRACKING) return false;
   try {
-    await writeAiScanRequest(env, record);
+    await writeAiScanRequest(env, record, profile);
   } catch {
     return false;
   }
 
   try {
     const day = isoDay(new Date(record.receivedAt));
-    const key = `ai_scan:index:${day}`;
+    const key = `${profile.kv}:index:${day}`;
     const current = await env.TRACKING.get(key, 'json');
     const submissionIds = Array.isArray(current) ? current.filter((value) => typeof value === 'string') : [];
     if (!submissionIds.includes(record.submissionId)) submissionIds.push(record.submissionId);
@@ -552,14 +628,14 @@ async function commitAiScanRequest(env, record) {
       expirationTtl: AI_SCAN_TTL_SECONDS,
     });
   } catch {
-    console.error('[api/ai-scan] daily index write failed');
+    console.error(`${profile.log} daily index write failed`);
   }
   return true;
 }
 
-async function writeAiScanRequest(env, record) {
+async function writeAiScanRequest(env, record, profile = AI_SCAN_PROFILE) {
   if (!env.TRACKING) throw new Error('TRACKING KV binding is missing');
-  await env.TRACKING.put(`ai_scan:req:${record.submissionId}`, JSON.stringify(record), {
+  await env.TRACKING.put(`${profile.kv}:req:${record.submissionId}`, JSON.stringify(record), {
     expirationTtl: AI_SCAN_TTL_SECONDS,
   });
 }
@@ -868,7 +944,7 @@ async function handleApply(request, env, corsHeaders, ctx) {
   return json(responsePayload, 200, corsHeaders);
 }
 
-async function syncAiScanRequestToCrm(env, record) {
+async function syncAiScanRequestToCrm(env, record, profile = AI_SCAN_PROFILE) {
   const config = ghlConfig(env, { requireWorkflow: false });
   if (!config.ok) return { ...record, crm: 'skipped' };
 
@@ -884,11 +960,11 @@ async function syncAiScanRequestToCrm(env, record) {
       `/contacts/search/duplicate?${query.toString()}`,
       { method: 'GET' },
     );
-    if (!duplicate.ok) return aiScanCrmFailed(record, 'duplicate_search', duplicate);
+    if (!duplicate.ok) return aiScanCrmFailed(record, 'duplicate_search', duplicate, profile);
 
     const classified = classifyAiScanDuplicateSearch(duplicate.body);
     if (classified.kind === 'unexpected') {
-      console.error('[api/ai-scan] unexpected GHL duplicate response', {
+      console.error(`${profile.log} unexpected GHL duplicate response`, {
         status: duplicate.status,
         keys: classified.keys,
       });
@@ -913,7 +989,7 @@ async function syncAiScanRequestToCrm(env, record) {
         phone: record.phone,
         website: record.website,
         companyName: record.dealershipName,
-        source: 'AutoLander AI Visibility scan',
+        source: profile.crmSource,
       };
       const customFields = buildCustomFields(env, record, AI_SCAN_CUSTOM_FIELD_KEYS);
       if (customFields.length) payload.customFields = customFields;
@@ -921,16 +997,16 @@ async function syncAiScanRequestToCrm(env, record) {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      if (!created.ok) return aiScanCrmFailed(record, 'create_contact', created);
+      if (!created.ok) return aiScanCrmFailed(record, 'create_contact', created, profile);
       contactId = extractContactId(created.body);
-      if (!contactId) return aiScanCrmFailed(record, 'create_contact_no_id', created);
+      if (!contactId) return aiScanCrmFailed(record, 'create_contact_no_id', created, profile);
       contactWasCreated = true;
     }
 
     const next = { ...record, crmContactId: contactId };
-    const tags = ['ai-scan-request'];
+    const tags = [profile.tag];
     if (record.smsConsent && (contactWasCreated || storedPhoneMatches)) {
-      tags.push('ai-scan-sms-ok');
+      tags.push(profile.smsTag);
     }
     const tagged = await aiScanGhlRequest(
       env,
@@ -938,7 +1014,7 @@ async function syncAiScanRequestToCrm(env, record) {
       `/contacts/${encodeURIComponent(contactId)}/tags`,
       { method: 'POST', body: JSON.stringify({ tags }) },
     );
-    if (!tagged.ok) return aiScanCrmFailed(next, 'add_tags', tagged);
+    if (!tagged.ok) return aiScanCrmFailed(next, 'add_tags', tagged, profile);
 
     const noted = await aiScanGhlRequest(
       env,
@@ -947,21 +1023,21 @@ async function syncAiScanRequestToCrm(env, record) {
       {
         method: 'POST',
         body: JSON.stringify({
-          body: buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }),
+          body: buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }, profile),
         }),
       },
     );
-    if (!noted.ok) return aiScanCrmFailed(next, 'add_note', noted);
+    if (!noted.ok) return aiScanCrmFailed(next, 'add_note', noted, profile);
     return { ...next, crm: 'synced' };
   } catch (error) {
-    console.error('[api/ai-scan] CRM sync error', { step: 'exception', name: error?.name || 'Error' });
+    console.error(`${profile.log} CRM sync error`, { step: 'exception', name: error?.name || 'Error' });
     return { ...record, crm: 'failed' };
   }
 }
 
 // Logs only the step and the HTTP status: never a response body, which can carry personal data.
-function aiScanCrmFailed(record, step, result) {
-  console.error('[api/ai-scan] CRM sync failed', { step, status: result?.status ?? 0 });
+function aiScanCrmFailed(record, step, result, profile = AI_SCAN_PROFILE) {
+  console.error(`${profile.log} CRM sync failed`, { step, status: result?.status ?? 0 });
   return { ...record, crm: 'failed', crmFailedStep: step };
 }
 
@@ -1002,11 +1078,11 @@ export async function aiScanGhlRequest(env, config, path, init = {}) {
   return ghlRequest(env, config, path, { ...init, method });
 }
 
-function buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }) {
+function buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }, profile = AI_SCAN_PROFILE) {
   const utms = record.ghlUtms || record.utms || {};
   const consent = record.consent;
   const lines = [
-    'AutoLander AI Visibility scan request',
+    profile.noteTitle,
     noteLine('CRM contact', contactWasCreated ? 'Created for this request' : 'Matched; contact fields were not changed'),
     '',
     'Request',
@@ -1015,6 +1091,7 @@ function buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }) 
     noteLine('City / ZIP', record.location),
     noteLine('Full name', record.fullName),
     noteLine('Role', record.role),
+    ...profile.extra.map((field) => noteLine(field.label, record[field.key])),
     noteLine('Email', record.email),
     noteLine('Phone', record.phone),
     noteLine('Submitted via', record.submittedVia),
@@ -1052,7 +1129,7 @@ function buildAiScanNoteBody(record, { contactWasCreated, storedPhoneMatches }) 
   return lines.join('\n').slice(0, 8000);
 }
 
-async function recordAiScanEvent({ request, env, ctx, record }) {
+async function recordAiScanEvent({ request, env, ctx, record, profile = AI_SCAN_PROFILE }) {
   if (!isProductionMetaRequest(request)) return;
   const alreadySeen = await wasEventSeen(env, record.eventId).catch(() => false);
   if (alreadySeen) return;
@@ -1060,20 +1137,20 @@ async function recordAiScanEvent({ request, env, ctx, record }) {
 
   const today = isoDay(new Date());
   await Promise.all([
-    bumpCounter(env, today, 'event', 'AIScanRequest'),
-    bumpCounter(env, today, 'event', 'AIScanRequest:server'),
+    bumpCounter(env, today, 'event', profile.eventName),
+    bumpCounter(env, today, 'event', `${profile.eventName}:server`),
     pushRecentEvent(env, {
       at: new Date().toISOString(),
-      event: 'AIScanRequest',
-      source: 'ai_visibility_scan',
+      event: profile.eventName,
+      source: profile.eventSource,
       vid: record.attribution?.vid || '',
       eventId: record.eventId,
     }),
   ]).catch((err) => {
-    console.error('[api/ai-scan] analytics write failed', String(err).slice(0, 120));
+    console.error(`${profile.log} analytics write failed`, String(err).slice(0, 120));
   });
 
-  if (env.SEND_WORKER_AI_SCAN_CAPI === 'false') return;
+  if (env[profile.capiSwitch] === 'false') return;
   const metaExternalId = canonicalMetaExternalId(env.META_PIXEL_ID, record.attribution?.vid);
   const userData = await buildUserData({
     email: record.email,
@@ -1094,16 +1171,16 @@ async function recordAiScanEvent({ request, env, ctx, record }) {
     externalId: metaExternalId,
   });
   const event = buildEvent({
-    name: 'AIScanRequest',
+    name: profile.eventName,
     eventId: record.eventId,
     eventTime: Math.floor(Date.now() / 1000),
     sourceUrl: record.current_page,
     actionSource: ACTION_SOURCE.website,
     userData,
     customData: {
-      content_name: 'ai_visibility_scan_requested',
-      content_category: 'ai_visibility',
+      ...profile.customData,
       role: record.role,
+      ...Object.fromEntries(profile.extra.map((field) => [field.key, record[field.key]])),
       ...(record.utms || {}),
     },
   });
@@ -1595,7 +1672,7 @@ function attributionKeys(utms) {
   };
 }
 
-async function enforceApplyRateLimit(request, env, { aiScanEmail = null } = {}) {
+async function enforceApplyRateLimit(request, env, { aiScanEmail = null, rateKeyPrefix = 'ai_scan' } = {}) {
   if (env.DISABLE_RATE_LIMITS === 'true' || !env.CHAT_RATE_LIMITS) return { ok: true };
   const now = new Date();
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -1605,12 +1682,12 @@ async function enforceApplyRateLimit(request, env, { aiScanEmail = null } = {}) 
     const ipHash = await aiScanRateHash(env, 'ip', ip);
     const limits = [
       {
-        key: `ai_scan:ip:${ipHash}:${day}`,
+        key: `${rateKeyPrefix}:ip:${ipHash}:${day}`,
         limit: AI_SCAN_IP_DAILY,
         ttl: secondsUntilTomorrow(now),
       },
       {
-        key: `ai_scan:ip:${ipHash}:${hour}`,
+        key: `${rateKeyPrefix}:ip:${ipHash}:${hour}`,
         limit: AI_SCAN_IP_HOURLY,
         ttl: 60 * 60 + 120,
       },
@@ -1619,7 +1696,7 @@ async function enforceApplyRateLimit(request, env, { aiScanEmail = null } = {}) 
     if (normalizedEmail) {
       const emailHash = await aiScanRateHash(env, 'email', normalizedEmail);
       limits.push({
-        key: `ai_scan:email:${emailHash}:${day}`,
+        key: `${rateKeyPrefix}:email:${emailHash}:${day}`,
         limit: AI_SCAN_EMAIL_DAILY,
         ttl: secondsUntilTomorrow(now),
       });

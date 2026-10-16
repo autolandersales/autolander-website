@@ -8,5 +8,6 @@
   "lucide": "Lucide icon identifier; the SVG attributes and utility classes supply its appearance.",
   "lucide-car-front": "Lucide icon identifier; the SVG attributes and utility classes supply its appearance.",
   "lucide-chevron-down": "Lucide icon identifier; the SVG attributes and utility classes supply its appearance.",
-  "lucide-menu": "Lucide icon identifier; the SVG attributes and utility classes supply its appearance."
+  "lucide-menu": "Lucide icon identifier; the SVG attributes and utility classes supply its appearance.",
+  "al-ads-summary": "JSON-LD speakable selector, with visual styles supplied by utilities."
 }

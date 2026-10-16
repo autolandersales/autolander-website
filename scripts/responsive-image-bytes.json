@@ -658,5 +658,53 @@
     "width": 1600,
     "format": "webp",
     "bytes": 45464
+  },
+  {
+    "slug": "commercial-poster",
+    "width": 640,
+    "format": "avif",
+    "bytes": 20706
+  },
+  {
+    "slug": "commercial-poster",
+    "width": 640,
+    "format": "webp",
+    "bytes": 26206
+  },
+  {
+    "slug": "commercial-poster",
+    "width": 960,
+    "format": "avif",
+    "bytes": 32271
+  },
+  {
+    "slug": "commercial-poster",
+    "width": 960,
+    "format": "webp",
+    "bytes": 42502
+  },
+  {
+    "slug": "commercial-close",
+    "width": 640,
+    "format": "avif",
+    "bytes": 39682
+  },
+  {
+    "slug": "commercial-close",
+    "width": 640,
+    "format": "webp",
+    "bytes": 51738
+  },
+  {
+    "slug": "commercial-close",
+    "width": 960,
+    "format": "avif",
+    "bytes": 63324
+  },
+  {
+    "slug": "commercial-close",
+    "width": 960,
+    "format": "webp",
+    "bytes": 83406
   }
 ]
