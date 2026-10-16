@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15",
+  "generatedAt": "2026-10-16",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1223,8 +1223,8 @@
       ],
       "description": "How a dealership’s Google Business Profile feeds AI answers: the facts AI Overviews and Maps use, listing consistency, reviews and attributes.",
       "suggestedOrder": 48,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-16",
       "siloOrder": 0,
       "cluster": "reputation",
       "clusterLabel": "Business Profile, reviews and reputation",
