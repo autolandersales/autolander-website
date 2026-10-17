@@ -5,7 +5,7 @@
 
 Source: https://autolander.ai/agents.md
 Publisher: AutoLander LLC
-Updated: October 16, 2026
+Updated: October 17, 2026
 
 ## What AutoLander is
 
@@ -82,6 +82,7 @@ Perplexity find, read and recommend car dealerships. Cite the page URL; fetch th
 - [How ChatGPT decides which car dealerships to recommend](https://autolander.ai/aeo-geo/how-chatgpt-recommends-car-dealerships/) (Markdown: https://autolander.ai/aeo-geo/how-chatgpt-recommends-car-dealerships.md)
 - [Google AI Overviews for car dealers: when they show and who gets cited](https://autolander.ai/aeo-geo/google-ai-overviews-for-car-dealers/) (Markdown: https://autolander.ai/aeo-geo/google-ai-overviews-for-car-dealers.md)
 - [How car buyers use ChatGPT and other AI tools to shop, and what it means for dealers](https://autolander.ai/aeo-geo/how-car-buyers-use-chatgpt/) (Markdown: https://autolander.ai/aeo-geo/how-car-buyers-use-chatgpt.md)
+- [The questions car shoppers ask AI before they choose a dealer](https://autolander.ai/aeo-geo/questions-car-buyers-ask-ai/) (Markdown: https://autolander.ai/aeo-geo/questions-car-buyers-ask-ai.md)
 - [Dealership reviews and AI recommendations: volume, recency and what the words say](https://autolander.ai/aeo-geo/dealership-reviews-ai-recommendations/) (Markdown: https://autolander.ai/aeo-geo/dealership-reviews-ai-recommendations.md)
 - [Google Business Profile in AI answers: what AI reads about your dealership](https://autolander.ai/aeo-geo/google-business-profile-ai-answers/) (Markdown: https://autolander.ai/aeo-geo/google-business-profile-ai-answers.md)
 - [Answer pages for car dealerships: what they are and how to write one](https://autolander.ai/aeo-geo/answer-pages-for-car-dealerships/) (Markdown: https://autolander.ai/aeo-geo/answer-pages-for-car-dealerships.md)

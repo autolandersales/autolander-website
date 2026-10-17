@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-16",
+  "generatedAt": "2026-10-17",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1249,8 +1249,8 @@
       ],
       "description": "The questions car buyers ask ChatGPT and other AI tools before choosing a dealer, grouped by stage, and how your pages and profiles should answer.",
       "suggestedOrder": 49,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-17",
       "siloOrder": 0,
       "cluster": "buyers",
       "clusterLabel": "How car buyers use AI",

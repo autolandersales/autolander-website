@@ -45,6 +45,10 @@ export const AEO_GEO_GUIDES = [
         "href": "/aeo-geo/how-car-buyers-use-chatgpt/",
         "text": "How car buyers use ChatGPT and other AI tools to shop, and what it means for dealers",
         "pillar": true
+      },
+      {
+        "href": "/aeo-geo/questions-car-buyers-ask-ai/",
+        "text": "The questions car shoppers ask AI before they choose a dealer"
       }
     ]
   },
@@ -121,4 +125,4 @@ export const AEO_GEO_GUIDES = [
 ];
 // Newest publish or edit date among them (null while none is published): src/ai/page-updated.js
 // moves the money page's Updated date / dateModified forward with it.
-export const AEO_GEO_GUIDES_UPDATED = "2026-10-16";
+export const AEO_GEO_GUIDES_UPDATED = "2026-10-17";
