@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17",
+  "generatedAt": "2026-10-18",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1275,8 +1275,8 @@
       ],
       "description": "A car dealership FAQ page built for buyers and AI tools: 40 questions to answer across sales, trade-ins, financing and service, and how to write each.",
       "suggestedOrder": 50,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-18",
       "siloOrder": 0,
       "cluster": "content",
       "clusterLabel": "Answer pages and content AI can quote",

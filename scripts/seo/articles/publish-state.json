@@ -208,8 +208,8 @@
     "publishedAt": "2026-10-17"
   },
   "car-dealership-faq-page": {
-    "status": "draft",
-    "publishedAt": null
+    "status": "published",
+    "publishedAt": "2026-10-18"
   },
   "search-console-ai-report-dealers": {
     "status": "draft",
