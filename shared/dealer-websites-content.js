@@ -1,91 +1,227 @@
-// Website creation is a distinct, scoped service. No software subscription offer or paid-ads promise applies.
+// shared/dealer-websites-content.js  (authored by Claude; copy changes go through Claude)
+//
+// The ONE source of every customer-facing string on /dealership-websites/ (custom dealership websites built
+// for SEO and AI search, on the dealer's own domain; the URL lives in ./dealer-websites-route.js).
+// Consumers (all must import from here, never restate a string; no fee or price appears anywhere on the page):
+//   src/websites/DealerWebsitesApp.jsx, src/websites/website-request.js  (React page)
+//   src/websites/static-mirror.js                                      (build-time no-JS HTML)
+//   scripts/seo/data-dealer-websites.mjs                               (head, JSON-LD)
+//   test/dealer-websites-*.test.js                                     (drift + copy lint)
+//
+// PUBLIC REPO: customer-facing copy only.
+//
+// MODULE RULES (tests enforce them):
+//   * `export const` data only; no side effects at module scope;
+//   * no JSX, no class names, no window / document / import.meta;
+//   * copy: no em or en dashes, no "not X. It's Y." cadence, no hype words, no competitor names, no result
+//     promises, no dollar figures at all (price and timing are quoted in the written scope, never on the page).
+//
+// PROOF RULE: every number on this page is AutoLander's own website, Lighthouse run or CRM (first party), dated,
+// and described as what happened for us, never as a forecast for the dealer. Claims registry rows CLM-PROOF-001
+// (dealerships), CLM-WEB-001 (Lighthouse), CLM-WEB-002 (AI-assistant leads), CLM-WEB-003 (search-engine leads).
+
 export const WEBSITE_PUBLISHED = '2026-10-19';
-export const WEBSITE_UPDATED = '2026-10-19';
+export const WEBSITE_UPDATED = '2026-10-19'; // SET TO THE ACTUAL SHIP DATE
+export const WEBSITE_UPDATED_HUMAN = 'October 19, 2026';
+
 export const META = {
   title: 'Dealership Websites for SEO and AI Search | AutoLander',
-  description: 'Custom dealership websites with mobile-first design, clear vehicle pages, and SEO and AI-search foundations. Request a website plan for your store.',
-  ogTitle: 'Your showroom earns trust. Your website should too.',
-  ogDescription: 'Custom dealership websites. Thoughtful design, clear vehicle pages, and search foundations built into the plan.',
-  ogImageAlt: 'AutoLander dealership website creation: designed for shoppers, built with search in mind',
+  description: 'Custom dealership websites on your own domain. Fast vehicle pages a buyer can use and an AI assistant can quote, built like our own site. Apply for a plan.',
+  ogTitle: 'A dealership website built to be found.',
+  ogDescription: 'Fast vehicle pages on your own domain that buyers, Google and AI assistants can all read. Built the way we built autolander.ai.',
+  ogImageAlt: 'AutoLander dealership websites: built for buyers, Google and AI search',
   breadcrumb: 'Dealership Websites',
 };
-export const SERVICE_SUMMARY = 'Custom website design and creation for dealerships, with mobile-first vehicle pages and technical SEO and AI-search foundations. Inventory, CRM, migration, hosting and support requirements are confirmed in the project scope.';
+
+export const SERVICE_SUMMARY = 'Custom dealership website design and build on the dealer’s own domain: a readable page for every vehicle, mobile-first speed, lead paths into the dealer’s CRM, and the SEO and AI-search foundations AutoLander runs on its own site. Inventory, CRM, migration, hosting and support are confirmed in a written scope before work starts.';
+
+// ---------- hero ----------
 export const HERO = {
-  eyebrow: 'CUSTOM DEALERSHIP WEBSITES · SEO + AI SEARCH',
-  h1Lead: 'Your showroom earns trust.',
-  h1Grad: 'Your website should too.',
-  sub: 'A custom website built around your inventory, your brand and the way buyers search. Clear vehicle pages, mobile-first design, and SEO and AI-search foundations planned from the start.',
+  eyebrow: 'Dealership websites · SEO and AI search · on your own domain',
+  h1Lead: 'A dealership website',
+  h1Grad: 'built to be found.',
+  sub: 'Fast vehicle pages on your own domain that a buyer can use on a phone and an AI assistant can quote, built the way we built autolander.ai. Apply below and we scope it with you on a 20-minute call.',
   cta: 'Request my website plan',
-  note: 'Tell us about your store. Scope, pricing and timing are agreed before work begins.',
-  chips: ['Built around your store', 'Designed for mobile', 'Search-ready foundations'],
+  note: 'No templates and no multi-year lock-in. Scope, price and timing in writing before any work starts.',
+  chips: ['Your own domain', 'Every vehicle its own page', 'Built like our own site', 'You keep everything', 'By application'],
 };
+
+// The shopper journey strip under the hero.
+export const JOURNEY = {
+  label: 'The three moments we build for',
+  steps: ['Find your store', 'Read the vehicle', 'Reach your team'],
+};
+
+// ---------- first-party proof (our own site, Lighthouse and CRM; see PROOF RULE above) ----------
+export const PROOF = {
+  eyebrow: 'Our own site is the proof',
+  title: 'We built autolander.ai the way we would build yours.',
+  lead: 'Every method on this page runs on our own website first. These are its numbers, read on October 19, 2026.',
+  // Lighthouse 12 (Chrome, headless), desktop preset and mobile emulation, run 2026-10-19 21:10Z on https://autolander.ai/.
+  // Lead counts from the Lead Log channel column (AI referral = chatgpt + gemini; organic = google, bing, yahoo, duckduckgo).
+  stats: [
+    { value: '99 · 100 · 100 · 100', compact: true, label: 'Google Lighthouse: performance, SEO, accessibility and best practices', detail: 'autolander.ai, phone and desktop, October 19, 2026' },
+    { value: '69', label: 'leads sent to us by ChatGPT and Gemini', detail: 'August 8 to October 19, 2026, from our own CRM' },
+    { value: '122', label: 'leads from Google, Bing and other search engines', detail: 'August 12 to October 19, 2026, from our own CRM' },
+    { value: '200+', label: 'dealerships run AutoLander', detail: 'paying accounts' },
+  ],
+  caption: 'Numbers from our own website, our own Lighthouse runs and our own CRM, as read on October 19, 2026. They are what happened for our software company. They are not a forecast or a promise of what your store will get.',
+};
+
+// ---------- problem ----------
 export const PROBLEM = {
-  eyebrow: 'THE CLICK IS ONLY THE BEGINNING',
-  title: 'A buyer on their phone should not have to work this hard.',
-  body: 'Find the car. Check the details. Ask a question. Those should be simple steps. If information is buried or the next step is unclear, a fresh coat of paint is only part of the job.',
+  eyebrow: 'Why most dealer sites lose the buyer',
+  title: 'Most dealer websites were built for a buyer who no longer exists.',
+  body: 'Today the buyer checks you on a phone, in a search box and, more and more, in an AI chat. Most dealer sites were never built for any of the three.',
   items: [
-    { title: 'The car looks right. The details are missing.', body: 'Bring vehicle facts, photos and a clear next step into one considered page.' },
-    { title: 'The website could belong to any lot.', body: 'Let your brand, your people and your local expertise give buyers a reason to remember your store.' },
-    { title: 'A better site should not mean a blind leap.', body: 'Review your inventory source, lead routing and existing pages before planning the switch.' },
+    { title: 'A template with your logo on it.', body: 'Same layout as the lot across town, same stock photos, same widgets. The buyer cannot tell you apart, so price is the only thing left to compare.' },
+    { title: 'Vehicle pages that fight the phone.', body: 'Slow to load, a carousel first, the facts somewhere below, the call button three scrolls down. The vehicle page is where the sale happens, and it is the page most providers treat as an afterthought.' },
+    { title: 'Invisible to the new search.', body: 'When a buyer asks an AI assistant which dealers nearby have a clean half-ton truck in their budget, the assistant can only quote what it can read. Facts locked in images, scripts and iframes give it nothing.' },
+    { title: 'Locked in, and nobody picks up.', body: 'A multi-year contract, a change request that takes weeks, and a site you do not actually own when you leave.' },
   ],
 };
+
+// ---------- what we build ----------
 export const BUILD = {
-  eyebrow: 'DESIGNED FOR THE SHOPPER. PLANNED FOR THE STORE.',
-  title: 'Every page has a job.',
-  intro: 'Your website should connect a good first impression to a useful next step. These are the building blocks we plan around your dealership.',
+  eyebrow: 'What we build',
+  title: 'Your store. Your domain. Every vehicle its own page.',
+  intro: 'A custom site, not a theme. Every build includes all six.',
   items: [
-    { number: '01', title: 'Make your store feel like your store.', body: 'A consistent visual system, clear positioning and content shaped around your brand and local market.', detail: 'Brand, homepage and local store information' },
-    { number: '02', title: 'Make the vehicle easy to understand.', body: 'Mobile-friendly inventory browsing and vehicle detail pages with readable facts, useful photos and prominent inquiry paths.', detail: 'Inventory browsing and vehicle detail pages' },
-    { number: '03', title: 'Make the next step obvious.', body: 'Calls and inquiry forms designed around how your team handles buyers. Routing and tracking are defined and tested against the agreed scope.', detail: 'Contact paths, lead routing and measurement' },
+    { number: '01', title: 'Your brand, not a theme.', body: 'Designed around your store: your photos, your people, your market and the reasons a buyer should choose you. It looks like your dealership because it is built from it.', detail: 'Design and homepage' },
+    { number: '02', title: 'A page for every vehicle.', body: 'Readable facts, clear photos, the price, and the call and text buttons at the top. Pages update from your inventory feed, so a sold car leaves and a new one arrives without anyone touching the site.', detail: 'Inventory and vehicle pages' },
+    { number: '03', title: 'Built for the phone first.', body: 'Fast on the connection a buyer actually has on your lot or in a parking lot across town. We measure every page type before launch and show you the numbers.', detail: 'Speed and mobile' },
+    { number: '04', title: 'Readable by Google and AI assistants.', body: 'Vehicle facts as page text, structured data for every vehicle and for the store, clean titles, sitemaps and crawl access. The same foundations our own site runs on.', detail: 'SEO and AI search' },
+    { number: '05', title: 'Leads that reach your team.', body: 'Call, text and a short form on every page, each delivered to your CRM with the vehicle and the page that produced it. We test the whole path before launch.', detail: 'Lead paths and tracking' },
+    { number: '06', title: 'You keep everything.', body: 'Your domain, your content, your data and your analytics. Support is month to month, with no multi-year lock-in. If you leave, the site goes with you.', detail: 'Ownership' },
   ],
-  boundary: 'Inventory feeds and CRM connections depend on provider access and compatibility. We confirm the approach before your build is scoped.',
+  boundary: 'Inventory feeds and CRM connections depend on what your providers allow. We confirm both on the call, before anything is scoped.',
 };
+
+// ---------- SEO and AI search ----------
 export const SEARCH = {
-  eyebrow: 'SEARCH FOUNDATIONS, BUILT IN',
-  title: 'Beautiful for people. Readable for search.',
-  body: 'AI-search readiness starts with the same fundamentals that make a useful website: accessible pages, clear store facts, readable vehicle details and answers that genuinely help a buyer.',
+  eyebrow: 'SEO and AI search, built in',
+  title: 'Beautiful for people. Readable for machines.',
+  body: 'An AI assistant cannot recommend what it cannot read. Every page we build carries the same four foundations our own site runs on.',
   items: [
-    ['Crawlable content', 'Important store and vehicle information available as page text, not trapped inside an image.'],
-    ['A clear page structure', 'Descriptive titles, connected pages, canonical URLs and sitemap coverage.'],
-    ['Relevant structured data', 'Appropriate markup that reflects what a shopper can actually see on the page.'],
-    ['A usable mobile experience', 'Responsive layouts, sensible image sizes, accessible forms and performance checks.'],
+    ['Facts as text', 'Year, make, model, trim, mileage, price and features as page text an assistant can quote, never trapped in an image or a script.'],
+    ['Structured data', 'Vehicle, dealer, FAQ and breadcrumb markup that describes exactly what a shopper sees on the page.'],
+    ['A clean structure', 'Descriptive titles, one URL per vehicle, sitemaps, canonical links and crawl access for the search engines and assistants that matter.'],
+    ['Speed on a phone', 'Measured page by page before launch and watched after, because a slow page loses the buyer and the crawler alike.'],
   ],
-  boundary: 'Search engines and AI assistants choose what they show or cite. We plan and test the foundations; no provider can promise rankings, AI recommendations or sales.',
+  boundary: 'Search engines and AI assistants decide what they show and whom they cite. We build and test the foundations; no provider can promise rankings, recommendations or sales.',
+  linkLabel: 'Read Google’s guidance on AI search',
+  linkHref: 'https://developers.google.com/search/docs/appearance/ai-features',
 };
+
+// ---------- how it starts (process promises with dates we control) ----------
 export const PROCESS = {
-  eyebrow: 'A CLEAR PLAN BEFORE YOU SWITCH',
-  title: 'Know what is changing. Before anything changes.',
+  eyebrow: 'How it starts',
+  title: 'Know what is changing before anything changes.',
   steps: [
-    { title: 'Start with your store.', body: 'Tell us what you want to improve, whether you have an existing site, and who needs to be involved.' },
-    { title: 'Agree the scope.', body: 'Review pages, design, inventory, CRM, migration and support. Confirm pricing, timing and responsibilities in writing.' },
-    { title: 'Review the experience.', body: 'See the design and content. Walk through the key shopper paths before approving the site.' },
-    { title: 'Launch with a checklist.', body: 'Check forms, lead delivery, tracking and agreed redirects. Define access, hosting and the support handoff.' },
+    { when: 'Day 0', title: 'Apply below.', body: 'Tell us about your store, your current site and what you want to change. Two minutes.' },
+    { when: 'Within 2 business days', title: 'We call you.', body: 'A 20-minute call. We look at your site, your inventory source and your market, and tell you plainly whether a new site is your next dollar or whether something smaller is.' },
+    { when: 'Within 5 business days of the call', title: 'A written scope.', body: 'Pages, design, inventory, CRM, migration, hosting, support, price and timing, in writing. Nothing starts until you approve it.' },
+    { when: 'Before any code', title: 'You see the design.', body: 'Homepage and vehicle page designs on your real inventory, reviewed with you on a call.' },
+    { when: 'Most builds: 4 to 8 weeks after approval', title: 'Launch with a checklist.', body: 'A redirect for every old URL that mattered, forms and lead delivery tested, tracking proven, speed measured, access and hosting handed to you.' },
+  ],
+  oem: { title: 'Franchise or OEM website requirements?', body: 'Tell us before the scope. Some programs require a certified provider for the main site and allow a second site on your own domain; some do not. We check your program and tell you on the call. This is not a claim of OEM certification or co-op approval.' },
+};
+
+// ---------- fit ----------
+export const FIT = {
+  eyebrow: 'Is this for your store?',
+  title: 'Built for dealers who want their own site, not a rental.',
+  goodTitle: 'A fit',
+  good: [
+    'Independent and franchise dealers, single stores and small groups',
+    'Owners, GMs and marketing directors who can approve a scope',
+    'Stores that want their own domain, content and data',
+    'Dealers who can give us inventory-feed and CRM access during the build',
+    'Stores paying a provider every month for a template they do not own',
+  ],
+  badTitle: 'Not a fit',
+  bad: [
+    'A rental template at the lowest monthly price',
+    'A site built in a weekend without a scope',
+    'A brand whose OEM program forbids a second site (we tell you on the call)',
+    'Anyone who needs a promised ranking, lead count or sales number',
+  ],
+  line: 'If your store is not a fit, we say so on the call and point you to something that is.',
+};
+
+// ---------- promises ----------
+export const PROMISES = {
+  title: 'What we promise',
+  items: [
+    'We reply within two business days of your application.',
+    'A written scope with price and timing before any work starts.',
+    'Design review on your real inventory before any code.',
+    'A redirect for every old URL that mattered, listed in the launch checklist.',
+    'Every form, call and text path tested into your CRM before launch.',
+    'Speed measured on every page type before launch, with the numbers shown to you.',
+    'Your domain, content, data and analytics stay yours.',
   ],
 };
+
+export const NEVER_PROMISE = {
+  title: 'What we never promise',
+  items: [
+    'A ranking, a position in an AI answer, or that an assistant will recommend you.',
+    'A number of visits, leads, appointments or sales.',
+    'That our own numbers on this page will repeat for your store.',
+    'OEM approval, co-op eligibility or affiliation with any manufacturer or platform.',
+    'That your inventory provider or CRM will allow a connection before we have checked.',
+  ],
+};
+
+// ---------- FAQ (the one question that uses the word dealers type is answered "No." and nothing else uses it) ----------
+export const FAQ_HEADING = { eyebrow: 'Before you build', lead: 'Good questions.', grad: 'Straight answers.' };
+
 export const FAQ = [
-  { q: 'Can you connect our inventory provider or CRM?', a: 'We review your providers, feed access and lead-routing requirements before confirming a connection. Compatibility and any provider fees are part of scoping, not something we assume.' },
-  { q: 'Will moving our site affect our existing SEO?', a: 'A migration needs a plan for existing content, important URLs, redirects and monitoring. Search visibility can fluctuate during a move. We discuss the migration requirements before recommending a switch.' },
-  { q: 'Does AI-search optimized mean guaranteed recommendations?', a: 'No. It means planning readable content, crawl access, useful answers and appropriate structured data into the site. Search engines and AI assistants decide what they display. Rankings, citations, traffic and sales are not promised.' },
-  { q: 'What if our dealership has OEM requirements?', a: 'Tell us before the project is scoped. OEM approval, co-op eligibility and existing provider contracts may affect what can be changed. We do not imply OEM certification or co-op approval.' },
-  { q: 'How is this different from your AEO and GEO service?', a: 'This service is for designing and building the website itself. Our AEO and GEO service focuses on your dealership’s visibility in AI search. If you already like your website, we can discuss whether visibility work is the better next step.' },
-  { q: 'What does a website cost, and how long does it take?', a: 'It depends on the pages, inventory source, integrations and migration involved. Scope, pricing and timing are confirmed before you agree to a build. Sending this form does not place an order.' },
-  { q: 'What happens after launch?', a: 'Hosting, domain access, content ownership, updates and ongoing support are specified in the written scope before work begins. We explain what is included and who is responsible for each part.' },
+  { q: 'What does a dealership website cost, and how long does it take?', a: 'It depends on the pages, the inventory source, the connections and the migration. You get the price and the timing in writing in the scope, within five business days of our call, and nothing starts until you approve it. Most builds launch four to eight weeks after that approval. Sending the form does not place an order.' },
+  { q: 'Do we own the website?', a: 'Yes. The domain stays in your name, the design and the content are yours, and your analytics and lead data are yours. Support is month to month. If you leave, the site goes with you.' },
+  { q: 'Can you connect our inventory provider and our CRM?', a: 'Usually, and we confirm it before scoping rather than assuming it. We check what your inventory provider and your CRM allow, and any provider fees, on the call. Compatibility is part of the scope, never a surprise after it.' },
+  { q: 'Will a new site hurt the search traffic we already have?', a: 'A move needs a plan: every old URL that matters gets a redirect, the content that earns traffic is carried over, and we watch the numbers after launch. Search traffic can move around during any migration. A planned move keeps that risk small, and you see the plan before you decide.' },
+  { q: 'What does AI-search ready actually mean?', a: 'It means an AI assistant can read the page: vehicle facts as text, structured data that matches what the shopper sees, a clean page structure, crawl access and fast pages. That is the same work that makes a site useful for a person. What any assistant then says is its own decision.' },
+  { q: 'Can you guarantee rankings, AI recommendations or sales?', allow: true, a: 'No. Search engines and AI assistants decide what they show and whom they cite. We build and test the foundations, show you our own numbers, and never promise yours.' },
+  { q: 'Our brand has OEM website requirements. Can you still help?', a: 'Tell us before the scope. Some programs require a certified provider for the main site and allow a second site on your own domain; some do not. We check your program and tell you on the call. We do not claim OEM certification or co-op approval.' },
+  { q: 'Why not just fix our current site?', a: 'Sometimes that is the right answer, and we will tell you if it is. If your provider lets you change the vehicle page, the speed and the structure, a smaller project may be your next dollar. If it does not, that is usually why you are here.' },
+  { q: 'How is this different from your AEO and GEO service?', a: 'This service designs and builds the website itself. AEO and GEO works on how your dealership shows up in AI answers, on and off your site. Many stores need the site first. If you already like your site, the visibility work may be the better next step, and the call sorts that out.' },
+  { q: 'Who hosts it, and what happens after launch?', a: 'Hosting, domain access, updates and support are written into the scope before work starts, with who is responsible for each part. After launch you get a month-to-month support plan and a person to call.' },
+  { q: 'I sell cars at a dealership. Is this page for me?', a: 'This page is for the people who approve a store’s website. If you sell cars and want help posting your inventory on Facebook Marketplace, that is our software, and the form below sends you straight to the demo.' },
 ];
+
+// ---------- form ----------
 export const FORM = {
-  title: 'Let’s plan your next website.',
-  intro: 'For dealership owners, GMs and marketing teams. Share your current setup and the next step you have in mind.',
-  note: 'No website yet? Leave that field blank. No order or payment is placed by submitting this form.',
+  title: 'Apply for your website plan.',
+  intro: 'For dealership owners, GMs and marketing directors. Two minutes. We reply within two business days.',
+  note: 'No website yet? Leave that field blank. Sending this form does not place an order.',
   submit: 'Request my website plan',
-  sending: 'Sending your request…',
-  success: 'Your request has been received.',
-  successBody: 'We’ll review your store and contact you about scope, fit and next steps. Your existing website has not been changed.',
+  sending: 'Sending your application…',
+  success: 'Your application is in.',
+  successBody: 'We review your store and reply within two business days with a call time. Your current website has not been touched.',
+  aside: {
+    eyebrow: 'Let’s talk about your store',
+    title: 'A website you are proud to send a buyer to.',
+    intro: 'Start with the dealership you have and the experience you want a buyer to have on their phone.',
+    checks: ['Your brand and your local market', 'Your inventory feed and your CRM', 'A written scope before any commitment'],
+    aeoPrompt: 'Already like your website?',
+    aeoLink: 'Explore AEO & GEO visibility',
+    demoPrompt: 'Want help posting inventory on Marketplace instead?',
+    demoLink: 'Book a software demo',
+  },
   errors: {
-    missing_dealership: 'Enter your dealership name.', invalid_website: 'Enter a valid website, or leave it blank if you do not have one.',
-    missing_location: 'Enter your city and state.', missing_project_goal: 'Choose what you want to work on.',
-    missing_full_name: 'Enter your first and last name.', missing_role: 'Choose your role.', invalid_email: 'Enter a valid email address.',
-    invalid_phone: 'Enter a valid phone number.', rate_limited: 'Too many requests were sent. Please try again later.',
-    unavailable: 'This form is temporarily unavailable. Please try again later or contact sales@autolander.ai.',
-    generic: 'We could not confirm your request. Your details are still here. Please try again.',
+    missing_dealership: 'Enter your dealership name.',
+    invalid_website: 'Enter a valid website, or leave it blank if you do not have one.',
+    missing_location: 'Enter your city and state.',
+    missing_project_goal: 'Choose what you want to do.',
+    missing_full_name: 'Enter your first and last name.',
+    missing_role: 'Choose your role.',
+    invalid_email: 'Enter a valid email address.',
+    invalid_phone: 'Enter a valid phone number.',
+    rate_limited: 'Too many requests were sent. Please try again later.',
+    unavailable: 'This form is temporarily unavailable. Please try again later or email sales@autolander.ai.',
+    generic: 'We could not confirm your application. Your details are still here. Please try again.',
   },
   fields: [
     { name: 'dealershipName', label: 'Dealership name', autocomplete: 'organization', maxLength: 160 },
@@ -95,6 +231,25 @@ export const FORM = {
     { name: 'fullName', label: 'Your first and last name', autocomplete: 'name', maxLength: 160 },
     { name: 'role', label: 'Your role', type: 'select' },
     { name: 'email', label: 'Work email', autocomplete: 'email', type: 'email', maxLength: 160 },
-    { name: 'phone', label: 'Phone', autocomplete: 'tel', type: 'tel', inputMode: 'tel', maxLength: 24 },
+    { name: 'phone', label: 'Mobile', autocomplete: 'tel', type: 'tel', inputMode: 'tel', maxLength: 24 },
+  ],
+  privacy: 'We use your details to review and reply to your application. See our',
+};
+
+// ---------- final CTA + footer ----------
+export const FINAL = {
+  eyebrow: 'Your store deserves a site buyers remember',
+  h2Lead: 'Build the site',
+  h2Grad: 'buyers and AI can both read.',
+};
+
+export const FOOTER = {
+  tagline: 'Dealership websites built to be found.',
+  taglineLine2: 'On your own domain, the way we built ours.',
+  nav: [
+    ['/aeo-geo-for-car-dealers/', 'AEO & GEO'],
+    ['/meta-ads-for-car-dealers/', 'Paid Ads & AI Commercials'],
+    ['/privacy.html', 'Privacy'],
+    ['/terms.html', 'Terms'],
   ],
 };

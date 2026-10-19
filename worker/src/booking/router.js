@@ -51,7 +51,6 @@ import {
 import { PAID_ADS_API_PATH, PAID_ADS_FORM_ID, PAID_ADS_PATH } from '../../../shared/paid-ads-route.js';
 import { PROJECT_GOAL_CHOICES, WEBSITE_SMS_CONSENT } from '../../../shared/dealer-websites-form.js';
 import { WEBSITE_API_PATH, WEBSITE_ERROR_ID, WEBSITE_PATH, WEBSITE_SUCCESS_ID } from '../../../shared/dealer-websites-route.js';
-import { sendWebsiteMetaEvent, sendWebsiteRequestAlert, websiteSlackWebhook, withWebsiteTimeout } from './website-notifications.js';
 
 const ROLE_CHOICES = ['Owner', 'Manager', 'Sales Rep'];
 const VEHICLE_COUNT_CHOICES = ['1-50', '51-150', '151+'];
@@ -123,6 +122,8 @@ const PAID_ADS_PROFILE = {
   eventSource: 'paid_ads_application',
   customData: { content_name: 'paid_ads_application_requested', content_category: 'paid_ads' },
 };
+// Dealership websites (/dealership-websites/): the same pipeline as the scan and the paid-ads application, under its
+// own KV / rate / event / tag names. The website field is optional (a dealer may have none yet).
 const WEBSITE_PROFILE = {
   id: 'dealer-websites',
   log: '[api/website-request]',
@@ -273,7 +274,7 @@ export async function handleBooking(request, env, corsHeaders, ctx) {
   }
 
   if (url.pathname === WEBSITE_API_PATH && request.method === 'POST') {
-    return handleWebsiteRequest(request, env, corsHeaders, ctx);
+    return handleAiScan(request, env, corsHeaders, ctx, WEBSITE_PROFILE);
   }
 
   if (url.pathname === '/api/availability' || url.pathname === '/api/book') {
@@ -314,226 +315,6 @@ export async function handleBooking(request, env, corsHeaders, ctx) {
 // still configured. No calendar cache is needed for the application flow.
 export async function syncAvailability() {
   return { ok: true, disabled: true };
-}
-
-// Website requests deliberately fail closed until Mike enables the route after
-// configuring its one Slack destination and reviewing existing GHL triggers.
-// This does not change the established scan / paid-ads route defaults.
-function websiteRequestReady(env) {
-  if (env.WEBSITE_REQUEST_PUBLIC_ROUTE !== 'on' || !env.TRACKING) return false;
-  if (!ghlConfig(env, { requireWorkflow: false }).ok || !websiteSlackWebhook(env)) return false;
-  if (env.GHL_API_BASE_URL && env.GHL_API_BASE_URL.replace(/\/+$/, '') !== GHL_BASE_URL) return false;
-  if (env.SEND_WORKER_WEBSITE_REQUEST_CAPI === 'true'
-    && (!/^\d+$/.test(String(env.META_PIXEL_ID || '')) || !env.META_CAPI_ACCESS_TOKEN)) return false;
-  return true;
-}
-
-async function handleWebsiteRequest(request, env, corsHeaders, ctx) {
-  const profile = WEBSITE_PROFILE;
-  const formMode = isAiScanFormRequest(request);
-  if (!websiteRequestReady(env)) return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
-  const body = await parseAiScanBody(request, formMode);
-  let submissionId = clean(body.submissionId, 96);
-  const honeypot = clean(body.company, 200) || clean(body.al_hp_q, 200) || clean(body.al_hp_x7, 200);
-  if ((formMode || honeypot) && !AI_SCAN_SUBMISSION_PATTERN.test(submissionId)) {
-    submissionId = newAiScanSubmissionId();
-  }
-  if (!honeypot && clean(body.role, 120) === MARKETPLACE_ROUTE.value) {
-    if (formMode) return aiScanRedirect(MARKETPLACE_DEMO_URL, corsHeaders);
-    return json({ ok: false, reason: 'marketplace_demo', demoUrl: MARKETPLACE_DEMO_URL }, 400, corsHeaders);
-  }
-  if (!AI_SCAN_SUBMISSION_PATTERN.test(submissionId)) {
-    return aiScanFailure('invalid_submission', 400, corsHeaders, formMode, profile);
-  }
-  let existing;
-  try { existing = await readAiScanRequest(env, submissionId, profile); }
-  catch { return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile); }
-  const saved = savedAiScanResponse(existing);
-  // A browser replay is an acknowledgement of the same durable request, not a
-  // delivery retry. It must not repeat a note, alert or uncertain contact write.
-  if (saved) return aiScanSuccess(saved, true, corsHeaders, formMode, profile);
-
-  if (!honeypot) {
-    const limited = await enforceApplyRateLimit(request, env, {
-      aiScanEmail: clean(body.email, 160), rateKeyPrefix: profile.rate,
-    });
-    if (!limited.ok) return aiScanFailure('rate_limited', 429, corsHeaders, formMode, profile);
-  }
-  const receivedAt = new Date().toISOString();
-  const fields = await collectAiScanFields(body, request, env, formMode, receivedAt, profile);
-  const invalidReason = honeypot ? '' : validateAiScanFields(fields, profile);
-  if (invalidReason) return aiScanFailure(invalidReason, 400, corsHeaders, formMode, profile);
-  const eventId = await aiScanEventId(submissionId, profile);
-  const response = { ok: true, duplicate: false, submissionId, eventId };
-  const record = {
-    ...buildAiScanRecord({ fields, submissionId, eventId, receivedAt,
-      status: honeypot ? 'spam' : 'received', crm: honeypot ? 'skipped' : 'pending', response }),
-    delivery: {},
-    productionEvent: isProductionMetaRequest(request),
-  };
-  const committed = await commitAiScanRequest(env, record, profile);
-  if (!committed) return aiScanFailure('unavailable', 503, corsHeaders, formMode, profile);
-  if (!honeypot) {
-    const delivery = deliverWebsiteRequest(env, record).catch(() => {
-      // The last durable checkpoint is the recovery authority. Never log PII,
-      // credentials or provider response bodies, and never silently resend.
-      console.error(`${profile.log} delivery interrupted; inspect stored checkpoints`);
-    });
-    if (ctx?.waitUntil) ctx.waitUntil(delivery);
-    else await delivery;
-  }
-  return aiScanSuccess(response, false, corsHeaders, formMode, profile);
-}
-
-const WEBSITE_DELIVERY_STEPS = ['crmContact', 'crmTags', 'crmNote', 'slack', 'meta'];
-
-function websiteCheckpointKey(submissionId, step, phase) {
-  return `${WEBSITE_PROFILE.kv}:delivery:${submissionId}:${step}:${phase}`;
-}
-
-async function writeWebsiteCheckpoint(env, submissionId, step, phase, value) {
-  if (!env.TRACKING) throw new Error('TRACKING KV binding is missing');
-  await env.TRACKING.put(websiteCheckpointKey(submissionId, step, phase), JSON.stringify(value), {
-    expirationTtl: AI_SCAN_TTL_SECONDS,
-  });
-}
-
-function websiteCrmSummary(record) {
-  const contact = record.delivery.crmContact?.state;
-  if (!contact) return record.crm;
-  if (contact === 'needs_review') return 'needs_review';
-  if (contact !== 'succeeded') return contact === 'started' ? 'pending' : 'failed';
-  const tags = record.delivery.crmTags?.state;
-  const note = record.delivery.crmNote?.state;
-  if (tags === 'succeeded' && note === 'succeeded') return 'synced';
-  return [tags, note].some(state => ['failed', 'uncertain', 'needs_review'].includes(state)) ? 'failed' : 'pending';
-}
-
-// Read-only recovery view. Request envelopes and per-effect receipts are
-// separate immutable keys: the envelope is not the current delivery summary.
-// This helper neither retries effects nor exposes an unauthenticated endpoint.
-export async function readWebsiteRequestState(env, submissionId) {
-  if (!AI_SCAN_SUBMISSION_PATTERN.test(submissionId)) throw new Error('invalid_submission');
-  const envelope = await readAiScanRequest(env, submissionId, WEBSITE_PROFILE);
-  if (!envelope) return null;
-  let record = { ...envelope, delivery: { ...(envelope.delivery || {}) } };
-  const checkpoints = await Promise.all(WEBSITE_DELIVERY_STEPS.map(async (step) => ({
-    step,
-    started: await env.TRACKING.get(websiteCheckpointKey(submissionId, step, 'started'), 'json'),
-    result: await env.TRACKING.get(websiteCheckpointKey(submissionId, step, 'result'), 'json'),
-  })));
-  for (const { step, started, result } of checkpoints) {
-    if (result?.delivery) record = { ...record, ...(result.patch || {}),
-      delivery: { ...record.delivery, [step]: result.delivery } };
-    else if (started?.delivery) record.delivery[step] = started.delivery;
-  }
-  return { ...record, crm: websiteCrmSummary(record) };
-}
-
-// Each stage is written once under a DISTINCT key: Cloudflare KV permits only
-// one write per second to the same key. Never overwrite the intake envelope
-// with rapid delivery updates. A missing result after a started receipt is an
-// uncertain outcome requiring provider readback. KV is eventually consistent,
-// not an atomic cross-isolate lock; this is NOT an exactly-once guarantee.
-async function websiteEffect(env, record, key, operation) {
-  if (record.delivery[key]) return record;
-  const started = { state: 'started', attemptedAt: new Date().toISOString() };
-  await writeWebsiteCheckpoint(env, record.submissionId, key, 'started', { delivery: started });
-  const result = await operation();
-  const delivery = { ...started, state: result.ok ? 'succeeded'
-      : result.needsReview ? 'needs_review' : result.uncertain ? 'uncertain' : 'failed',
-    status: result.status || 0, completedAt: new Date().toISOString() };
-  await writeWebsiteCheckpoint(env, record.submissionId, key, 'result', {
-    delivery, ...(result.patch ? { patch: result.patch } : {}),
-  });
-  return { ...record, ...(result.patch || {}), delivery: { ...record.delivery, [key]: delivery } };
-}
-
-async function websiteGhlRequest(env, config, path, init) {
-  return withWebsiteTimeout(async (signal) => {
-    const result = await aiScanGhlRequest(env, config, path, { ...init, redirect: 'error', signal });
-    return { ...result, uncertain: !result.ok && (result.status === 0 || result.status >= 500) };
-  });
-}
-
-async function deliverWebsiteRequest(env, original) {
-  const profile = WEBSITE_PROFILE;
-  const config = ghlConfig(env, { requireWorkflow: false });
-  let record = await websiteEffect(env, original, 'crmContact', async () => {
-    const query = new URLSearchParams({ locationId: config.locationId, email: original.email, number: original.phone });
-    const found = await websiteGhlRequest(env, config,
-      `/contacts/search/duplicate?${query}`, { method: 'GET' });
-    if (!found.ok) return { ...found, uncertain: false, patch: { crm: 'failed', crmFailedStep: 'duplicate_search' } };
-    const classified = classifyAiScanDuplicateSearch(found.body);
-    if (classified.kind === 'unexpected') return { ok: false, needsReview: true, patch: { crm: 'needs_review' } };
-    if (classified.kind === 'match') {
-      const phone = normalizePhone(classified.phone);
-      return { ok: true, status: found.status, patch: { crmContactId: classified.contactId,
-        contactWasCreated: false, storedPhoneMatches: classified.hasPhone && phone.ok && phone.e164 === original.phone } };
-    }
-    const payload = {
-      locationId: config.locationId, firstName: original.firstName, lastName: original.lastName,
-      email: original.email, phone: original.phone, companyName: original.dealershipName,
-      source: profile.crmSource, ...(original.website ? { website: original.website } : {}),
-    };
-    const customFields = buildCustomFields(env, original, AI_SCAN_CUSTOM_FIELD_KEYS);
-    if (customFields.length) payload.customFields = customFields;
-    const created = await websiteGhlRequest(env, config, '/contacts/', { method: 'POST', body: JSON.stringify(payload) });
-    const contactId = created.ok ? extractContactId(created.body) : '';
-    if (!contactId) return { ...created, ok: false, uncertain: created.ok || created.uncertain,
-      patch: { crm: 'failed', crmFailedStep: 'create_contact' } };
-    return { ok: true, status: created.status,
-      patch: { crmContactId: contactId, contactWasCreated: true, storedPhoneMatches: true } };
-  });
-  if (record.delivery.crmContact.state === 'succeeded') {
-    record = await websiteEffect(env, record, 'crmTags', async () => {
-      const tags = [profile.tag];
-      if (record.smsConsent && (record.contactWasCreated || record.storedPhoneMatches)) tags.push(profile.smsTag);
-      return websiteGhlRequest(env, config, `/contacts/${encodeURIComponent(record.crmContactId)}/tags`,
-        { method: 'POST', body: JSON.stringify({ tags }) });
-    });
-    // Preserve the request note even if tagging is rejected; this is its own
-    // checkpoint and does not repeat the contact or tag effect.
-    record = await websiteEffect(env, record, 'crmNote', () => websiteGhlRequest(env, config,
-      `/contacts/${encodeURIComponent(record.crmContactId)}/notes`, { method: 'POST', body: JSON.stringify({
-        body: buildAiScanNoteBody(record, record, profile),
-      }) }));
-    record = { ...record, crm: websiteCrmSummary(record) };
-  }
-
-  // One alert writer only. No GHL workflow enrollment or second Slack path.
-  record = await websiteEffect(env, record, 'slack', () => sendWebsiteRequestAlert(env, record));
-
-  if (!record.productionEvent || env.SEND_WORKER_WEBSITE_REQUEST_CAPI !== 'true') {
-    record.delivery.meta = { state: 'skipped', reason: !record.productionEvent ? 'not_production' : 'disabled' };
-    await writeWebsiteCheckpoint(env, record.submissionId, 'meta', 'result', { delivery: record.delivery.meta });
-    return record;
-  }
-  record = await websiteEffect(env, record, 'meta', async () => {
-    const userData = await buildUserData({
-      email: record.email, phone: record.phone, firstName: record.firstName, lastName: record.lastName,
-      fbp: record.fbp, fbc: record.fbc, fbclid: record.fbclid, clickTimestamp: record.attribution?.ts,
-      ip: record.clientIpAddress, ua: record.userAgent, country: record.country, region: record.region,
-      regionCode: record.regionCode, city: record.city, postalCode: record.postalCode,
-      externalId: canonicalMetaExternalId(env.META_PIXEL_ID, record.attribution?.vid),
-    });
-    return sendWebsiteMetaEvent(env, buildEvent({
-      name: profile.eventName, eventId: record.eventId,
-      eventTime: Math.floor(new Date(record.receivedAt).getTime() / 1000),
-      sourceUrl: `https://autolander.ai${WEBSITE_PATH}`, actionSource: ACTION_SOURCE.website,
-      userData, customData: { ...profile.customData, role: record.role, projectGoal: record.projectGoal,
-        ...(record.utms || {}) },
-    }));
-  });
-  const today = isoDay(new Date(record.receivedAt));
-  await Promise.all([
-    bumpCounter(env, today, 'event', profile.eventName),
-    bumpCounter(env, today, 'event', `${profile.eventName}:server`),
-    bumpCounter(env, today, 'meta', record.delivery.meta.state === 'succeeded' ? 'capi_ok' : 'capi_failed'),
-    pushRecentEvent(env, { at: record.receivedAt, event: profile.eventName, source: profile.eventSource,
-      vid: record.attribution?.vid || '', eventId: record.eventId }),
-  ]).catch(() => {});
-  return record;
 }
 
 async function handleAiScan(request, env, corsHeaders, ctx, profile = AI_SCAN_PROFILE) {
@@ -1245,7 +1026,7 @@ async function syncAiScanRequestToCrm(env, record, profile = AI_SCAN_PROFILE) {
         lastName: record.lastName,
         email: record.email,
         phone: record.phone,
-        website: record.website,
+        ...(record.website ? { website: record.website } : {}),
         companyName: record.dealershipName,
         source: profile.crmSource,
       };
