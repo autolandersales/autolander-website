@@ -143,6 +143,7 @@ export default function SiteFooter({ extraLine = '', mobileCtaPadding = false, c
             <a href="/guide/ai-for-car-dealerships/" className="block py-1 transition-colors hover:text-blue-500">AI for Dealerships</a>
             <a href="/aeo-geo-for-car-dealers/" className="block py-1 transition-colors hover:text-blue-500">AEO & GEO for Dealers</a>
             <a href="/meta-ads-for-car-dealers/" className="block py-1 transition-colors hover:text-blue-500">Paid Ads & AI Commercials</a>
+            <a href="/dealership-websites/" className="block py-1 transition-colors hover:text-blue-500">Dealership Websites</a>
             <a href="/dealer-inventory-management/" className="block py-1 transition-colors hover:text-blue-500">Inventory Management</a>
             <a href="/why-facebook-marketplace-only/" className="block py-1 transition-colors hover:text-blue-500">Why Marketplace Only</a>
             <a href="/why-we-dont-answer-your-buyers/" className="block py-1 transition-colors hover:text-blue-500">Why No Auto-Reply</a>

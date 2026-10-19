@@ -12,9 +12,13 @@ import { renderTeamMirrorRest } from '../src/team/static-mirror.js';
 import { renderPaidAdsMirrorRest } from '../src/ads/static-mirror.js';
 import { HEADLINES as PAID_ADS_HEADLINES, META as PAID_ADS_META } from '../shared/paid-ads-content.js';
 import { PAID_ADS_DIR } from '../shared/paid-ads-route.js';
+import { WEBSITE_DIR } from '../shared/dealer-websites-route.js';
+import { HERO as WEBSITE_HERO, META as WEBSITE_META } from '../shared/dealer-websites-content.js';
+import { renderDealerWebsitesMirrorRest } from '../src/websites/static-mirror.js';
 import { aiVisibilityHead, aiVisibilityLegacyStubHtml } from './seo/data-ai-visibility.mjs';
 import { teamHead } from './seo/data-team.mjs';
 import { paidAdsHead } from './seo/data-paid-ads.mjs';
+import { dealerWebsitesHead } from './seo/data-dealer-websites.mjs';
 import { cleanSsr, loadPrerender } from './prerender.mjs';
 import {
   appendBeaconLoader,
@@ -90,7 +94,7 @@ writeFileSync(adminIndexPath, adminShell, 'utf8');
 // zero-redirect shell the /admin path already has.
 mkdirSync(payDir, { recursive: true });
 writeFileSync(payIndexPath, noindexShell, 'utf8');
-// Dedicated readable shells for the two exact-path lazy routes. The utility shells above remain
+// Dedicated readable shells for exact-path lazy marketing routes. The utility shells above remain
 // empty and noindex; these marketing routes carry their own metadata and crawlable static body.
 const preview = isPreviewShell(appShell);
 const env = loadEnv(preview ? 'preview' : 'production', process.cwd(), '');
@@ -99,7 +103,7 @@ const manifest = JSON.parse(readFileSync(join(distDir, '.vite/manifest.json'), '
 const indexCssFiles = new Set(manifest['index.html'].css || []);
 const cssAllowlist = JSON.parse(readFileSync(new URL('./route-css-allowlist.json', import.meta.url), 'utf8'));
 
-// Only these two marketing routes receive lean CSS; the homepage and utility shells retain the full
+// Only these marketing routes receive lean CSS; the homepage and utility shells retain the full
 // stylesheet. `rootHtml` is the markup the route ships (checked for class coverage against the lean CSS).
 function leanRouteShell(moduleId, rootHtml) {
   const entry = manifest[moduleId];
@@ -196,6 +200,16 @@ prerenderedRoute('src/ads/PaidAdsApp.jsx', {
   rootHtml: prerender.renderPaidAds({ restHtml: renderPaidAdsMirrorRest({ capiUrl }), variant: 'a' }),
 });
 
+prerenderedRoute('src/websites/DealerWebsitesApp.jsx', {
+  dir: WEBSITE_DIR,
+  title: WEBSITE_META.title,
+  headHtml: dealerWebsitesHead({ preview }),
+  hydrate: 'dealer-websites',
+  island: 'websites-rest',
+  h1Text: `${WEBSITE_HERO.h1Lead} ${WEBSITE_HERO.h1Grad}`,
+  rootHtml: prerender.renderDealerWebsites({ restHtml: renderDealerWebsitesMirrorRest({ capiUrl }) }),
+});
+
 prerenderedRoute('src/ai/AiVisibilityApp.jsx', {
   dir: AI_VISIBILITY_DIR,
   title: META.title,
@@ -221,7 +235,7 @@ for (const legacy of AI_VISIBILITY_LEGACY_PATHS) {
 
 // The homepage's first screen is its static home block (index.html), so its app also loads after the first paint.
 // 404.html, /admin and /pay keep the head entry script: they are app pages with nothing static to show first.
-// These three pages are also the ones the Worker serves with Cache-Control: no-transform, so they load Cloudflare
+// These prerendered pages are also the ones the Worker serves with Cache-Control: no-transform, so they load Cloudflare
 // Web Analytics themselves (appendBeaconLoader); worker-no-transform.test.js keeps the two lists identical.
 writeFileSync(indexPath, appendBeaconLoader(deferEntryToPaint(appShell)), 'utf8');
 

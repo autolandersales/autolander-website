@@ -19,6 +19,7 @@
 import { NAV } from './registry.mjs';
 import { AI_VISIBILITY_PATH } from '../../shared/ai-visibility-route.js';
 import { PAID_ADS_PATH } from '../../shared/paid-ads-route.js';
+import { WEBSITE_PATH } from '../../shared/dealer-websites-route.js';
 import {
   SILOS, SUGGESTED_ORDER, isBlog, isPublished, articlePath,
 } from './articles/article-system.mjs';
@@ -78,6 +79,7 @@ const EVERGREEN_GROUPS = [
     ['/guide/ai-for-car-dealerships/', 'AI for dealerships'],
     [AI_VISIBILITY_PATH, 'AEO and GEO for car dealers'],
     [PAID_ADS_PATH, 'Paid ads and AI commercials for car dealers'],
+    [WEBSITE_PATH, 'Dealership websites with SEO and AI-search foundations'],
     ['/facebook-ai-tools/', 'Facebook AI tools for dealers'],
     ['/ai-chat-for-car-dealers/', 'AI chat for car dealers'],
     ['/guide/how-to-sell-rvs-on-facebook-marketplace/', 'How to sell RVs on Marketplace'],

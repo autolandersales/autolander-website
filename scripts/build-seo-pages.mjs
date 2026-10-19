@@ -22,6 +22,7 @@ import {
 } from './seo/registry.mjs';
 import { COMPETITORS, GUIDE } from './compare-data.mjs';
 import { PAID_ADS_LASTMOD } from './seo/data-paid-ads.mjs';
+import { WEBSITE_LASTMOD } from './seo/data-dealer-websites.mjs';
 import {
   buildArticlePage, hubAugmentLinks, contentStatusJson, articleSitemapEntries,
   loadPublishState, isPublished, articlePath, gatePageLinks, siloNumberingProblems, SUGGESTED_ORDER,
@@ -557,6 +558,7 @@ function sitemapXml() {
     { loc: SITE.origin + '/', pri: '1.0', freq: 'weekly' },
     { loc: SITE.origin + NAV.aiVisibility.path, pri: '0.8', freq: 'monthly', lastmod: AI_VISIBILITY_LASTMOD },
     { loc: SITE.origin + NAV.paidAds.path, pri: '0.8', freq: 'monthly', lastmod: PAID_ADS_LASTMOD },
+    { loc: SITE.origin + NAV.dealerWebsites.path, pri: '0.8', freq: 'monthly', lastmod: WEBSITE_LASTMOD },
     { loc: SITE.origin + '/terms.html', pri: '0.3', freq: 'yearly' },
     { loc: SITE.origin + '/privacy.html', pri: '0.3', freq: 'yearly' },
     { loc: SITE.origin + NAV.category.path, pri: '0.9', freq: 'weekly' },

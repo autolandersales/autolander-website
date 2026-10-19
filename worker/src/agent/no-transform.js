@@ -1,8 +1,8 @@
-// Keeps Cloudflare's edge from rewriting the HTML of the three prerendered pages.
+// Keeps Cloudflare's edge from rewriting the HTML of the allowlisted prerendered pages.
 //
 // WHY
 // ---
-// /, the AEO and GEO page (/aeo-geo-for-car-dealers/, shared/ai-visibility-route.js) and /team/ ship a finished
+// The homepage and allowlisted marketing pages below ship a finished
 // first screen and load their app after the first paint.
 // Cloudflare Web Analytics (RUM) is auto-injected at the edge as a High-priority <script type="module">
 // from a third-party origin (static.cloudflareinsights.com) plus a /cdn-cgi/rum call; it lands on the
@@ -25,7 +25,7 @@
 //   object is present only cf.clientAcceptEncoding counts; when it is missing the client's value is unknown and
 //   the response is left to the edge (no no-transform: the edge compresses and injects the beacon as before, and
 //   the page's own loader stands down). The header itself is read only where there is no cf object (Node tests).
-// * Email Address Obfuscation. Every address on these three pages is already wrapped in email_off
+// * Email Address Obfuscation. Every address on these pages is already wrapped in email_off
 //   (intentionally readable, identical to what the edge serves today); test/worker-no-transform.test.js
 //   fails the build if an unwrapped address appears on them.
 // * Nothing else in use: no Rocket Loader, Fonts, Polish or JS detections on these pages. Zaraz is
@@ -50,9 +50,10 @@
 
 import { AI_VISIBILITY_PATH } from '../../../shared/ai-visibility-route.js';
 import { PAID_ADS_PATH } from '../../../shared/paid-ads-route.js';
+import { WEBSITE_PATH } from '../../../shared/dealer-websites-route.js';
 
 // The retired /ai-visibility/ is not listed: the Worker answers it with a 301 (moved-pages.js) before this runs.
-export const NO_TRANSFORM_PATHS = new Set(['/', '/index.html', AI_VISIBILITY_PATH, '/team/', PAID_ADS_PATH]);
+export const NO_TRANSFORM_PATHS = new Set(['/', '/index.html', AI_VISIBILITY_PATH, '/team/', PAID_ADS_PATH, WEBSITE_PATH]);
 export const NO_TRANSFORM_KEY = 'cfg:html_no_transform';
 
 export async function readNoTransformMode(env) {

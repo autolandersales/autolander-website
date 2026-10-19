@@ -7,8 +7,9 @@ import { AI_VISIBILITY_IMAGES } from '../shared/ai-images.js';
 import { FORM, FOOTER, WHERE_BUYERS_ASK } from '../shared/ai-visibility-content.js';
 import { AI_VISIBILITY_DIR } from '../shared/ai-visibility-route.js';
 import { PAID_ADS_DIR } from '../shared/paid-ads-route.js';
+import { WEBSITE_DIR } from '../shared/dealer-websites-route.js';
 import { assertClassCoverage } from '../scripts/route-css.mjs';
-import { renderAiVisibility, renderTeam, renderPaidAds } from './helpers/route-render.js';
+import { renderAiVisibility, renderTeam, renderPaidAds, renderDealerWebsites } from './helpers/route-render.js';
 import { HTMLParser } from './helpers/html-text.js';
 
 const read = (path) => readFileSync(path, 'utf8');
@@ -17,9 +18,9 @@ const allowlist = JSON.parse(read('scripts/route-css-allowlist.json'));
 
 test('route shells carry covered inline CSS and preserve full CSS on the shared shells', { skip: !hasDist }, () => {
   // [dist dir, hydrate id]: the AEO and GEO page lives at AI_VISIBILITY_DIR but keeps its internal id.
-  const liveRender = { team: renderTeam, 'ai-visibility': renderAiVisibility, 'paid-ads': renderPaidAds };
-  const entryName = { team: 'TeamApp', 'ai-visibility': 'AiVisibilityApp', 'paid-ads': 'PaidAdsApp' };
-  for (const [dir, route] of [['team', 'team'], [AI_VISIBILITY_DIR, 'ai-visibility'], [PAID_ADS_DIR, 'paid-ads']]) {
+  const liveRender = { team: renderTeam, 'ai-visibility': renderAiVisibility, 'paid-ads': renderPaidAds, 'dealer-websites': renderDealerWebsites };
+  const entryName = { team: 'TeamApp', 'ai-visibility': 'AiVisibilityApp', 'paid-ads': 'PaidAdsApp', 'dealer-websites': 'DealerWebsitesApp' };
+  for (const [dir, route] of [['team', 'team'], [AI_VISIBILITY_DIR, 'ai-visibility'], [PAID_ADS_DIR, 'paid-ads'], [WEBSITE_DIR, 'dealer-websites']]) {
     const html = read(`dist/${dir}/index.html`);
     const styles = [...html.matchAll(/<style data-inline-route-css>([\s\S]*?)<\/style>/g)];
     assert.equal(styles.length, 1, route);
@@ -32,7 +33,9 @@ test('route shells carry covered inline CSS and preserve full CSS on the shared 
     assert.doesNotMatch(html, /<link rel="modulepreload"/, `${route}: no parse-time modulepreload`);
     const preloads = (html.match(/<script data-al-boot[^>]*data-al-preload="([^"]+)"/)?.[1] || '').split(' ');
     assert.match(preloads[0], new RegExp(`^/assets/${entryName[route]}-[\\w-]+\\.js$`));
-    assert.ok(preloads.some((href) => /\/assets\/SiteFooter-/.test(href)), `${route}: SiteFooter chunk preloaded`);
+    if (route !== 'dealer-websites') {
+      assert.ok(preloads.some((href) => /\/assets\/SiteFooter-/.test(href)), `${route}: SiteFooter chunk preloaded`);
+    }
     assert.ok(!preloads.some((href) => /\/assets\/index-/.test(href)), `${route}: entry chunk is not preloaded twice`);
     for (const href of preloads) assert.ok(existsSync(`dist${href}`), `${route}: ${href} exists`);
     const root = html.match(/<!--AL_STATIC_PAGE_START-->([\s\S]*?)<!--AL_STATIC_PAGE_END-->/)[1];
@@ -68,7 +71,7 @@ test('team static JS import closure contains no AI page copy or AI image descrip
 });
 
 test('prerendered routes ship React markup in #root, the mirror as one island, and boot after the first paint', { skip: !hasDist }, () => {
-  for (const [dir, route, island] of [['team', 'team', 'team-rest'], [AI_VISIBILITY_DIR, 'ai-visibility', 'ai-rest'], [PAID_ADS_DIR, 'paid-ads', 'ads-rest']]) {
+  for (const [dir, route, island] of [['team', 'team', 'team-rest'], [AI_VISIBILITY_DIR, 'ai-visibility', 'ai-rest'], [PAID_ADS_DIR, 'paid-ads', 'ads-rest'], [WEBSITE_DIR, 'dealer-websites', 'websites-rest']]) {
     const html = read(`dist/${dir}/index.html`);
     // Hydration adopts #root's children, so React's first element must be #root's first child (no whitespace).
     assert.match(html, new RegExp(`<!--AL_STATIC_PAGE_START--><div id="root" data-al-hydrate="${route}"><div class="min-h-dvh`));

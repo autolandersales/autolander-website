@@ -9,6 +9,7 @@ import {
 import { beaconLoaderHtml, CF_WEB_ANALYTICS_TOKEN } from '../scripts/spa-shell.mjs';
 import { AI_VISIBILITY_DIR, AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js';
 import { PAID_ADS_DIR, PAID_ADS_PATH } from '../shared/paid-ads-route.js';
+import { WEBSITE_DIR, WEBSITE_PATH } from '../shared/dealer-websites-route.js';
 
 const html = '<html><head><script defer src="/al-tags-v1.js"></script></head><body>OK</body></html>';
 const page = (headers = {}, status = 200) => new Response(html, { status, headers: {
@@ -72,7 +73,7 @@ test('in production the coding follows cf.clientAcceptEncoding, never the rewrit
   assert.equal(explicit.headers.get('Content-Encoding'), 'gzip');
 });
 
-test('the three prerendered pages get no-transform and a Worker-chosen encoding; headers are otherwise kept', async () => {
+test('allowlisted prerendered pages get no-transform and a Worker-chosen encoding; headers are otherwise kept', async () => {
   for (const path of NO_TRANSFORM_PATHS) {
     const out = withoutEdgeRewrites(get(path), new URL(`https://autolander.ai${path}`), page({ 'X-AL-Zaraz': 'injected:on' }), { mode: 'on' });
     assert.equal(out.headers.get('Cache-Control'), 'max-age=600, no-transform', path);
@@ -98,11 +99,14 @@ test('the no-transform list carries the AEO and GEO page and never its retired U
   assert.ok(NO_TRANSFORM_PATHS.has('/aeo-geo-for-car-dealers/'));
   assert.ok(!NO_TRANSFORM_PATHS.has('/ai-visibility/'));
   assert.ok(!NO_TRANSFORM_PATHS.has('/ai-visibility'));
+  assert.ok(NO_TRANSFORM_PATHS.has(WEBSITE_PATH));
+  assert.ok(!NO_TRANSFORM_PATHS.has(`${WEBSITE_PATH}extra`));
 });
 
 test('everything else is returned as the very same response', () => {
   const cases = [
     [get('/contact/'), 'https://autolander.ai/contact/', page()],
+    [get('/dealership-websites/extra'), 'https://autolander.ai/dealership-websites/extra', page()],
     [get('/ai-visibility'), 'https://autolander.ai/ai-visibility', page()],
     [get('/team/index.md'), 'https://autolander.ai/team/index.md', page({ 'Content-Type': 'text/markdown' })],
     [get('/'), 'https://autolander.ai/', page({ 'Content-Type': 'text/markdown; charset=utf-8' })],
@@ -164,7 +168,7 @@ test('the Worker applies it end to end on the homepage and nowhere else, keeping
 });
 
 test('the built no-transform pages are exactly the pages that load Web Analytics themselves', { skip: !existsSync('dist/index.html') }, () => {
-  const files = { '/': 'dist/index.html', '/index.html': 'dist/index.html', [AI_VISIBILITY_PATH]: `dist/${AI_VISIBILITY_DIR}/index.html`, '/team/': 'dist/team/index.html', [PAID_ADS_PATH]: `dist/${PAID_ADS_DIR}/index.html` };
+  const files = { '/': 'dist/index.html', '/index.html': 'dist/index.html', [AI_VISIBILITY_PATH]: `dist/${AI_VISIBILITY_DIR}/index.html`, '/team/': 'dist/team/index.html', [PAID_ADS_PATH]: `dist/${PAID_ADS_DIR}/index.html`, [WEBSITE_PATH]: `dist/${WEBSITE_DIR}/index.html` };
   assert.deepEqual([...NO_TRANSFORM_PATHS].sort(), Object.keys(files).sort());
   for (const [path, file] of Object.entries(files)) {
     const built = readFileSync(file, 'utf8');

@@ -4,9 +4,10 @@ import test from 'node:test';
 import { maybeInjectZaraz } from '../worker/src/agent/zaraz-tag.js';
 import { AI_VISIBILITY_DIR } from '../shared/ai-visibility-route.js';
 import { PAID_ADS_DIR } from '../shared/paid-ads-route.js';
+import { WEBSITE_DIR } from '../shared/dealer-websites-route.js';
 
 test('built shells preserve the deferred facade and Worker Zaraz contract', { skip: !existsSync('dist/index.html') }, async () => {
-  for (const path of ['index.html', '404.html', 'pay/index.html', `${AI_VISIBILITY_DIR}/index.html`, 'team/index.html', `${PAID_ADS_DIR}/index.html`, 'admin/index.html']) {
+  for (const path of ['index.html', '404.html', 'pay/index.html', `${AI_VISIBILITY_DIR}/index.html`, 'team/index.html', `${PAID_ADS_DIR}/index.html`, `${WEBSITE_DIR}/index.html`, 'admin/index.html']) {
     const html = readFileSync(`dist/${path}`, 'utf8');
     const tag = '<script defer src="/al-tags-v1.js"></script>';
     const count = path.startsWith('admin/') ? 0 : 1;

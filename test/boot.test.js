@@ -3,6 +3,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 import { pickBoot } from '../src/lib/boot.js';
 import { AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js';
+import { WEBSITE_PATH } from '../shared/dealer-websites-route.js';
 import { bootLoaderHtml, deferEntryToPaint } from '../scripts/spa-shell.mjs';
 
 test('pickBoot hydrates only the prerendered page it was built for', () => {
@@ -16,6 +17,14 @@ test('pickBoot hydrates only the prerendered page it was built for', () => {
   assert.equal(pickBoot('paid-ads', '/team/'), 'spa');
   assert.equal(pickBoot('team', '/meta-ads-for-car-dealers/'), 'spa');
   assert.equal(pickBoot(null, '/meta-ads-for-car-dealers/'), 'spa');
+  assert.equal(WEBSITE_PATH, '/dealership-websites/');
+  assert.equal(pickBoot('dealer-websites', WEBSITE_PATH), 'dealer-websites');
+  assert.equal(pickBoot('dealer-websites', '/dealership-websites'), 'dealer-websites');
+  assert.equal(pickBoot('dealer-websites', '/dealership-websites/extra'), 'spa');
+  assert.equal(pickBoot('dealer-websites', '/dealership-websites-new/'), 'spa');
+  assert.equal(pickBoot('dealer-websites', '/team/'), 'spa');
+  assert.equal(pickBoot('paid-ads', WEBSITE_PATH), 'spa');
+  assert.equal(pickBoot(null, WEBSITE_PATH), 'spa');
   // The retired URL never hydrates (it is a 301 or a redirect stub).
   assert.equal(pickBoot('ai-visibility', '/ai-visibility/'), 'spa');
   assert.equal(pickBoot('ai-visibility', '/ai-visibility'), 'spa');

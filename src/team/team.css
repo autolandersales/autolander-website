@@ -27,6 +27,7 @@
 @source "../../shared/team-content.js";
 @source "../../shared/ai-visibility-route.js";
 @source "../../shared/paid-ads-route.js";
+@source "../../shared/dealer-websites-route.js";
 @source "../components/DemoApplication.jsx";
 @source "../components/SiteNav.jsx";
 @source "../components/SiteFooter.jsx";

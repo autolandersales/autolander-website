@@ -1,4 +1,4 @@
-// Build-time React prerender for the hydrated marketing routes (/aeo-geo-for-car-dealers/, /team/).
+// Build-time React prerender for the hydrated marketing routes.
 //
 // loadPrerender() bundles src/prerender.jsx for Node with esbuild (the same settings the tests already use to
 // render these pages, test/helpers/route-render.js) and returns its render functions. cleanSsr() turns React's

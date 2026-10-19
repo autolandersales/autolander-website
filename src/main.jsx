@@ -22,13 +22,15 @@ if (boot === 'spa') {
     </StrictMode>,
   )
 } else {
-  // Prerendered /aeo-geo-for-car-dealers/, /team/ and /meta-ads-for-car-dealers/ (see lib/boot.js). Root is not mounted on this path, so its one
+  // Prerendered marketing routes (see lib/boot.js). Root is not mounted on this path, so its one
   // PageView is sent here instead. If the route chunk fails to load, the static page stays fully usable.
   pageView()
   const route = boot === 'ai-visibility'
     ? import('./ai/AiVisibilityApp.jsx').then((m) => m.hydrateAiVisibility(container))
     : boot === 'paid-ads'
       ? import('./ads/PaidAdsApp.jsx').then((m) => m.bootPaidAds(container))
-      : import('./team/TeamApp.jsx').then((m) => m.bootTeam(container))
+      : boot === 'dealer-websites'
+        ? import('./websites/DealerWebsitesApp.jsx').then((m) => m.bootDealerWebsites(container))
+        : import('./team/TeamApp.jsx').then((m) => m.bootTeam(container))
   route.catch(() => {})
 }

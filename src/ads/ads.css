@@ -24,6 +24,7 @@
 @source "../../shared/paid-ads-content.js";
 @source "../../shared/paid-ads-form.js";
 @source "../../shared/paid-ads-route.js";
+@source "../../shared/dealer-websites-route.js";
 @source "../../shared/ai-scan-form.js";
 @source "../../shared/ai-visibility-route.js";
 @source "../components/SiteNav.jsx";

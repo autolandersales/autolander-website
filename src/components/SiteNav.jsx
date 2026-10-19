@@ -12,6 +12,7 @@ const SERVICES = [
   ['/aeo-geo-for-car-dealers/', 'AEO & GEO'],
   ['/team/', 'Team Plans'],
   ['/meta-ads-for-car-dealers/', 'Paid Ads & AI Commercials'],
+  ['/dealership-websites/', 'Dealership Websites'],
 ];
 
 const navLinkClass = 'text-xs font-semibold text-slate-400 transition-all hover:text-white lg:text-sm';
@@ -55,8 +56,9 @@ export default function SiteNav({
   const isHome = page === 'home';
   const isAiVisibility = page === 'ai-visibility';
   const isPaidAds = page === 'paid-ads';
+  const isDealerWebsites = page === 'dealer-websites';
   // Pages whose primary action is an in-page form: a real link, so it works before hydration and without JS.
-  const primaryHref = isAiVisibility ? '#scan-form' : isPaidAds ? '#apply-form' : '';
+  const primaryHref = isAiVisibility ? '#scan-form' : isPaidAds ? '#apply-form' : isDealerWebsites ? '#website-request-form' : '';
   const desktopServicesOpen = desktopServicesHovered || desktopServicesPinned;
 
   const closeMenus = () => {
@@ -94,6 +96,8 @@ export default function SiteNav({
     ? 'Get my free scan'
     : isPaidAds
       ? 'Apply now'
+    : isDealerWebsites
+      ? 'Plan my website'
     : page === 'team'
       ? 'Book Team Demo'
       : 'Book Demo';

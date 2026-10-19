@@ -5,6 +5,8 @@
 @source not "./ads";
 /* Same for the AEO and GEO page, /aeo-geo-for-car-dealers/ (src/ai/ai.css). */
 @source not "./ai";
+/* The dealership website service builds an isolated stylesheet (src/websites/websites.css). */
+@source not "./websites";
 
 @font-face {
   font-family: 'Inter';

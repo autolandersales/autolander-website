@@ -3,12 +3,14 @@ import App from './App.jsx'
 import { pageView } from './lib/tags.js'
 import { AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js'
 import { PAID_ADS_PATH } from '../shared/paid-ads-route.js'
+import { WEBSITE_PATH } from '../shared/dealer-websites-route.js'
 
 const AdminApp = lazy(() => import('./admin/AdminApp.jsx'))
 const PayApp = lazy(() => import('./pay/PayApp.jsx'))
 const TeamApp = lazy(() => import('./team/TeamApp.jsx'))
 const AiVisibilityApp = lazy(() => import('./ai/AiVisibilityApp.jsx'))
 const PaidAdsApp = lazy(() => import('./ads/PaidAdsApp.jsx'))
+const DealerWebsitesApp = lazy(() => import('./websites/DealerWebsitesApp.jsx'))
 
 function isAdminPath() {
   if (typeof window === 'undefined') return false
@@ -40,6 +42,13 @@ function isPaidAdsPath() {
   if (typeof window === 'undefined') return false
   const path = window.location.pathname
   return path === PAID_ADS_PATH || path === PAID_ADS_PATH.slice(0, -1)
+}
+
+// The website service owns this exact landing page, never nested or similarly named paths.
+function isDealerWebsitesPath() {
+  if (typeof window === 'undefined') return false
+  const path = window.location.pathname
+  return path === WEBSITE_PATH || path === WEBSITE_PATH.slice(0, -1)
 }
 
 export default function Root() {
@@ -84,6 +93,14 @@ export default function Root() {
     return (
       <Suspense fallback={null}>
         <PaidAdsApp />
+      </Suspense>
+    )
+  }
+
+  if (isDealerWebsitesPath()) {
+    return (
+      <Suspense fallback={null}>
+        <DealerWebsitesApp />
       </Suspense>
     )
   }

@@ -27,6 +27,7 @@ import { loadBlogPosts } from '../scripts/seo/articles/blog-loader.mjs';
 import { SPA_PAGE_PATHS } from '../scripts/seo/registry.mjs';
 import { AI_VISIBILITY_DIR, AI_VISIBILITY_PATH } from '../shared/ai-visibility-route.js';
 import { PAID_ADS_DIR, PAID_ADS_PATH } from '../shared/paid-ads-route.js';
+import { WEBSITE_DIR, WEBSITE_PATH } from '../shared/dealer-websites-route.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(resolve(ROOT, p), 'utf8');
@@ -168,7 +169,7 @@ test('every published drip article is in the directory and every draft is absent
 test('every directory link resolves to a page the site builds', () => {
   const groups = buildHomeDirectory(REAL, loadPublishState());
   // The prerendered SPA pages are built into dist/ by scripts/spa-fallback.mjs, not into public/.
-  const spaBuilt = { [AI_VISIBILITY_PATH]: AI_VISIBILITY_DIR, [PAID_ADS_PATH]: PAID_ADS_DIR };
+  const spaBuilt = { [AI_VISIBILITY_PATH]: AI_VISIBILITY_DIR, [PAID_ADS_PATH]: PAID_ADS_DIR, [WEBSITE_PATH]: WEBSITE_DIR };
   for (const g of groups) {
     for (const { href } of g.links) {
       assert.ok(href.startsWith('/') && href.endsWith('/'), `${href}: directory links are root-relative with a trailing slash`);

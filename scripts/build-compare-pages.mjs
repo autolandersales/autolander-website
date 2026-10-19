@@ -20,6 +20,7 @@ import { orgLd, ORG_ID, ogImageFor } from './seo/shell.mjs';
 import { NAV } from './seo/registry.mjs';
 import { AI_VISIBILITY_NAV_LABEL } from '../shared/ai-visibility-route.js';
 import { PAID_ADS_NAV_LABEL } from '../shared/paid-ads-route.js';
+import { WEBSITE_NAV_LABEL } from '../shared/dealer-websites-route.js';
 import {
   compareHubLinks, versusPageLinks, loadPublishState,
 } from './seo/articles/article-system.mjs';
@@ -250,7 +251,7 @@ function siteHeader(crumbActive) {
     <a class="brand" href="${SITE.origin}/">
       <img src="/autolander-logo.png" alt="AutoLander" width="400" height="120" class="brand-logo" />
     </a>
-    <nav class="topnav" aria-label="Site"><a href="${NAV.blog.path}">Blog</a><a href="${NAV.blog.path}#guides">Guides</a><a href="/#pricing">Pricing</a><details class="navdrop"><summary>Services</summary><span class="navdrop-menu"><a href="${NAV.aiVisibility.path}">${esc(AI_VISIBILITY_NAV_LABEL)}</a><a href="/team/">Team Plans</a><a href="${NAV.paidAds.path}">${esc(PAID_ADS_NAV_LABEL)}</a></span></details></nav>
+    <nav class="topnav" aria-label="Site"><a href="${NAV.blog.path}">Blog</a><a href="${NAV.blog.path}#guides">Guides</a><a href="/#pricing">Pricing</a><details class="navdrop"><summary>Services</summary><span class="navdrop-menu"><a href="${NAV.aiVisibility.path}">${esc(AI_VISIBILITY_NAV_LABEL)}</a><a href="/team/">Team Plans</a><a href="${NAV.paidAds.path}">${esc(PAID_ADS_NAV_LABEL)}</a><a href="${NAV.dealerWebsites.path}">${esc(WEBSITE_NAV_LABEL)}</a></span></details></nav>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="${SITE.origin}/">Home</a>
       <span>/</span>
@@ -784,7 +785,7 @@ function renderGuide() {
     }),
     `  <header class="topbar">
     <a class="brand" href="${SITE.origin}/"><img src="/autolander-logo.png" alt="AutoLander" width="400" height="120" class="brand-logo" /></a>
-    <nav class="topnav" aria-label="Site"><a href="${NAV.blog.path}">Blog</a><a href="${NAV.blog.path}#guides">Guides</a><a href="/#pricing">Pricing</a><details class="navdrop"><summary>Services</summary><span class="navdrop-menu"><a href="${NAV.aiVisibility.path}">${esc(AI_VISIBILITY_NAV_LABEL)}</a><a href="/team/">Team Plans</a><a href="${NAV.paidAds.path}">${esc(PAID_ADS_NAV_LABEL)}</a></span></details></nav>
+    <nav class="topnav" aria-label="Site"><a href="${NAV.blog.path}">Blog</a><a href="${NAV.blog.path}#guides">Guides</a><a href="/#pricing">Pricing</a><details class="navdrop"><summary>Services</summary><span class="navdrop-menu"><a href="${NAV.aiVisibility.path}">${esc(AI_VISIBILITY_NAV_LABEL)}</a><a href="/team/">Team Plans</a><a href="${NAV.paidAds.path}">${esc(PAID_ADS_NAV_LABEL)}</a><a href="${NAV.dealerWebsites.path}">${esc(WEBSITE_NAV_LABEL)}</a></span></details></nav>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="${SITE.origin}/">Home</a><span>/</span><span>Guide</span><span>/</span>
       <span class="crumb-active">Facebook Marketplace automation</span>
