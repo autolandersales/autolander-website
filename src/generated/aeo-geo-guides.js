@@ -101,6 +101,10 @@ export const AEO_GEO_GUIDES = [
         "href": "/aeo-geo/measure-dealership-ai-visibility/",
         "text": "How to measure your dealership’s AI visibility: questions, repeat runs and margins",
         "pillar": true
+      },
+      {
+        "href": "/aeo-geo/search-console-ai-report-dealers/",
+        "text": "Search Console’s generative AI report for dealers: AI Overviews and AI Mode impressions"
       }
     ]
   },
@@ -129,4 +133,4 @@ export const AEO_GEO_GUIDES = [
 ];
 // Newest publish or edit date among them (null while none is published): src/ai/page-updated.js
 // moves the money page's Updated date / dateModified forward with it.
-export const AEO_GEO_GUIDES_UPDATED = "2026-10-18";
+export const AEO_GEO_GUIDES_UPDATED = "2026-10-19";

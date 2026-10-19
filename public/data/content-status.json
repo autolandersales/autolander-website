@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-18",
+  "generatedAt": "2026-10-19",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1301,8 +1301,8 @@
       ],
       "description": "How car dealers read Search Console’s generative AI report: AI Overviews and AI Mode impressions by page, and what the report leaves out.",
       "suggestedOrder": 51,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-19",
       "siloOrder": 0,
       "cluster": "measurement",
       "clusterLabel": "Measuring AI visibility",
