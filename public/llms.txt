@@ -133,6 +133,7 @@ The free scan is requested by the dealer on the page itself: https://autolander.
 - [The questions car shoppers ask AI before they choose a dealer](https://autolander.ai/aeo-geo/questions-car-buyers-ask-ai.md): The questions car buyers ask ChatGPT and other AI tools before choosing a dealer, grouped by stage, and how your pages and profiles should answer.
 - [The car dealership FAQ page AI can quote: 40 questions to answer](https://autolander.ai/aeo-geo/car-dealership-faq-page.md): A car dealership FAQ page built for buyers and AI tools: 40 questions to answer across sales, trade-ins, financing and service, and how to write each.
 - [Search Console’s generative AI report for dealers: reading AI Overviews and AI Mode impressions](https://autolander.ai/aeo-geo/search-console-ai-report-dealers.md): How car dealers read Search Console’s generative AI report: AI Overviews and AI Mode impressions by page, and what the report leaves out.
+- [Buy here pay here dealers in AI answers: bad-credit questions and honest pages](https://autolander.ai/aeo-geo/buy-here-pay-here-ai-answers.md): How buy here pay here dealers show up when shoppers ask AI about bad-credit car loans, and how to write honest in-house financing pages and replies.
 - [Vehicle detail pages AI can read: price, mileage, VIN and features as page text](https://autolander.ai/aeo-geo/vehicle-detail-page-ai-readable.md): How to make vehicle detail pages that AI tools and search engines can read: price, mileage, VIN and features as text, not locked in images or scripts.
 
 ## Why we work the way we do

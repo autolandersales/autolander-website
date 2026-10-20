@@ -116,6 +116,10 @@ export const AEO_GEO_GUIDES = [
         "href": "/aeo-geo/ai-search-for-independent-dealers/",
         "text": "AI search for independent used car dealers: where a small lot should start",
         "pillar": true
+      },
+      {
+        "href": "/aeo-geo/buy-here-pay-here-ai-answers/",
+        "text": "Buy here pay here dealers in AI answers: bad-credit questions and honest pages"
       }
     ]
   },
@@ -133,4 +137,4 @@ export const AEO_GEO_GUIDES = [
 ];
 // Newest publish or edit date among them (null while none is published): src/ai/page-updated.js
 // moves the money page's Updated date / dateModified forward with it.
-export const AEO_GEO_GUIDES_UPDATED = "2026-10-19";
+export const AEO_GEO_GUIDES_UPDATED = "2026-10-20";

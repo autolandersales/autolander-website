@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19",
+  "generatedAt": "2026-10-20",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1327,8 +1327,8 @@
       ],
       "description": "How buy here pay here dealers show up when shoppers ask AI about bad-credit car loans, and how to write honest in-house financing pages and replies.",
       "suggestedOrder": 52,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-20",
       "siloOrder": 0,
       "cluster": "dealer-types",
       "clusterLabel": "AI search by dealership type",
