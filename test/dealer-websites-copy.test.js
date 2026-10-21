@@ -3,6 +3,8 @@ import test from 'node:test';
 
 import * as WEB from '../shared/dealer-websites-content.js';
 import { FAQ, FORM, HERO, META, PROOF } from '../shared/dealer-websites-content.js';
+import { MARKETPLACE_DEMO_PATH, MARKETPLACE_ROUTE, ROLE_CHOICES } from '../shared/dealer-websites-form.js';
+import { WEBSITE_FORM_ID } from '../shared/dealer-websites-route.js';
 import { renderDealerWebsitesMirrorRest } from '../src/websites/static-mirror.js';
 import { HTMLParser } from './helpers/html-text.js';
 
@@ -76,4 +78,22 @@ test('the no-JS mirror renders every section of the copy module in order, with o
   assert.equal((html.match(/<form\b/g) || []).length, 1);
   assert.doesNotMatch(html, /\$\d/);
   assert.doesNotMatch(html, /<footer\b|dw-footer|dw-mobile-example/);
+});
+
+test('the salesperson FAQ points at the demo link the page renders; the website form never claims to reach the demo', () => {
+  // The website form has no Marketplace role, so a salesperson who fills it in files a website application.
+  assert.ok(!ROLE_CHOICES.includes(MARKETPLACE_ROUTE.value) && !ROLE_CHOICES.includes(MARKETPLACE_ROUTE.label));
+  const salesperson = FAQ.filter((item) => /\bsell cars\b/i.test(item.q));
+  assert.equal(salesperson.length, 1);
+  assert.ok(salesperson[0].a.includes(FORM.aside.demoLink), 'the answer names the demo link by its label');
+  for (const value of collectStrings(WEB)) {
+    assert.doesNotMatch(value, /\bform below\b|\bform\b[^.!?]{0,40}\b(?:sends|takes|routes) you\b[^.!?]{0,40}\bdemo\b/i, value.slice(0, 90));
+  }
+  const html = renderDealerWebsitesMirrorRest({ capiUrl: 'https://autolander.ai' });
+  const demo = html.indexOf(`href="${MARKETPLACE_DEMO_PATH}"`);
+  const form = html.indexOf(`<form id="${WEBSITE_FORM_ID}"`);
+  const section = html.lastIndexOf('<section', form);
+  assert.ok(demo > section && demo < form, 'the demo link sits in the request section, next to the form');
+  assert.ok(text(html.slice(demo, form)).includes(FORM.aside.demoLink));
+  assert.ok(html.indexOf('id="website-questions"') > form, 'the FAQ follows the form');
 });

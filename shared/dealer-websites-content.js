@@ -207,7 +207,7 @@ export const FAQ = [
   { q: 'Why not just fix our current site?', a: 'Sometimes that is the right answer, and we will tell you if it is. If your provider lets you change the vehicle page, the speed and the structure, a smaller project may be your next dollar. If it does not, that is usually why you are here.' },
   { q: 'How is this different from your AEO and GEO service?', a: 'This service designs and builds the website itself. AEO and GEO works on how your dealership shows up in AI answers, on and off your site. Many stores need the site first. If you already like your site, the visibility work may be the better next step, and the call sorts that out.' },
   { q: 'Who hosts it, and what happens after launch?', a: 'Hosting, domain access, updates and support are written into the scope before work starts, with who is responsible for each part. After launch you get a month-to-month support plan and a person to call.' },
-  { q: 'I sell cars at a dealership. Is this page for me?', a: 'This page is for the people who approve a store’s website. If you sell cars and want help posting your inventory on Facebook Marketplace, that is our software, and the form below sends you straight to the demo.' },
+  { q: 'I sell cars at a dealership. Is this page for me?', a: 'This page is for the people who approve a store’s website. If you sell cars and want help posting your inventory on Facebook Marketplace, that is our software. Use the Book a software demo link next to the application form. It takes you straight to the demo.' },
 ];
 
 // ---------- form ----------
