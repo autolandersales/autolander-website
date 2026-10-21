@@ -13,10 +13,13 @@ const ai = ['ai-chat-phone', 'ai-chat-tablet', 'ai-overview-search', 'ai-chat-de
 const team = { 'sales-hub': 'sales_hub', dashboard: 'dashboard', 'team-access': 'team', autopilot: 'autopilot' };
 // Paid ads page: frames of AutoLander's own Slow Day commercial (scripts/image-sources/paid-ads/, 1080 x 1920).
 const ads = ['commercial-poster', 'commercial-close'];
+// Dealership websites page: illustrations of a neutral website concept drawn for the page (scripts/image-sources/dealership-websites/, 2048 x 1536).
+const websites = ['website-concept-hero', 'website-vehicle-page', 'website-ai-readable'];
 const sources = [
   ...ai.map((slug) => ({ slug, folder: 'ai-visibility', input: resolve(input, `${slug}.png`) })),
   ...Object.entries(team).map(([slug, source]) => ({ slug, folder: 'team', input: resolve(root, 'public/training/manuals/assets', `${source}.png`) })),
   ...ads.map((slug) => ({ slug, folder: 'paid-ads', input: resolve(root, 'scripts/image-sources/paid-ads', `${slug}.png`) })),
+  ...websites.map((slug) => ({ slug, folder: 'dealership-websites', input: resolve(root, 'scripts/image-sources/dealership-websites', `${slug}.png`) })),
 ];
 // Main column only, below the onboarding and referral banners. Coordinates are
 // in the original 2880 x 1800 sales_hub.png; exclude the entire account sidebar.
@@ -58,7 +61,7 @@ for (const source of selected) {
   }
 }
 await mkdir(resolve(root, 'public/og'), { recursive: true });
-for (const [slug, name] of [['ai-chat-phone', 'ai-visibility'], ['sales-hub', 'team']]) {
+for (const [slug, name] of [['ai-chat-phone', 'ai-visibility'], ['sales-hub', 'team'], ['website-concept-hero', 'dealership-websites']]) {
   const source = selected.find((entry) => entry.slug === slug);
   if (!source) continue;
   const result = await sourceImage(source).resize(1200, 630, { fit: 'contain', background: '#050505' }).jpeg({ quality: 82, mozjpeg: true }).toFile(resolve(root, `public/og/${name}.jpg`));

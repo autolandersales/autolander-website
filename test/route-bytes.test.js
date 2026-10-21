@@ -33,9 +33,7 @@ test('route shells carry covered inline CSS and preserve full CSS on the shared 
     assert.doesNotMatch(html, /<link rel="modulepreload"/, `${route}: no parse-time modulepreload`);
     const preloads = (html.match(/<script data-al-boot[^>]*data-al-preload="([^"]+)"/)?.[1] || '').split(' ');
     assert.match(preloads[0], new RegExp(`^/assets/${entryName[route]}-[\\w-]+\\.js$`));
-    if (route !== 'dealer-websites') {
-      assert.ok(preloads.some((href) => /\/assets\/SiteFooter-/.test(href)), `${route}: SiteFooter chunk preloaded`);
-    }
+    assert.ok(preloads.some((href) => /\/assets\/SiteFooter-/.test(href)), `${route}: SiteFooter chunk preloaded`);
     assert.ok(!preloads.some((href) => /\/assets\/index-/.test(href)), `${route}: entry chunk is not preloaded twice`);
     for (const href of preloads) assert.ok(existsSync(`dist${href}`), `${route}: ${href} exists`);
     const root = html.match(/<!--AL_STATIC_PAGE_START-->([\s\S]*?)<!--AL_STATIC_PAGE_END-->/)[1];

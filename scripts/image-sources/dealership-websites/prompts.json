@@ -1,0 +1,71 @@
+{
+  "endpoint": "openai/gpt-image-2.5/sunburst/text-to-image",
+  "input": { "image_size": { "width": 2048, "height": 1536 }, "quality": "high", "output_format": "png" },
+  "style": "Premium, crisp, perfectly legible product-UI illustration for a car-dealer marketing website. Dark theme: near-black #050505 surroundings, #0b0d12 app background, #111827 cards, subtle 1px white borders at low opacity, rounded corners, electric-blue #3b82f6 accents with a soft blue glow. Clean geometric sans-serif typography (Inter-like), generous spacing, every word spelled exactly as written in quotes. No company logos, no AI-product logos or wordmarks, no browser brand, no watermarks, no people, and no extra text beyond what is specified.",
+  "rules": "This is a neutral website template: the only business name anywhere is the plain placeholder wordmark \"Your Dealership\", and no other dealership, company, car make or car model name appears. Every vehicle is a generic debadged vehicle: no emblems, badges, grille logos, model lettering or license plates on the bodywork. No digits or numerals anywhere in the image. No prices, mileage figures, model years, VINs, phone numbers, street addresses, web addresses, star ratings, review counts or award badges anywhere. Phone status bars show no clock and no numbers, and there is no operating-system taskbar, dock or clock. Every device and card sits fully inside the frame with clear margin on all sides, so nothing is cut off.",
+  "images": [
+    {
+      "slug": "website-concept-hero",
+      "required": [
+        "Your Dealership",
+        "Inventory",
+        "Our store",
+        "Contact",
+        "Find your next vehicle",
+        "Browse inventory",
+        "SUV",
+        "Sedan",
+        "Truck",
+        "Call the store",
+        "Text us",
+        "Price",
+        "Mileage",
+        "Trim",
+        "Exterior color"
+      ],
+      "scene": "A laptop and a phone side by side on a near-black surface, both front-on and both showing the same dealership website template concept, with no browser brand. The laptop browser has an empty rounded address bar with only a small lock icon. The website header shows the plain text wordmark \"Your Dealership\" on the left and the menu \"Inventory\", \"Our store\", \"Contact\" on the right. Below it a wide homepage hero: a realistic photo of a dark blue debadged midsize SUV parked outdoors in warm late-afternoon light, next to the headline \"Find your next vehicle\" and a white rounded button labeled \"Browse inventory\". Under the hero, a row of three vehicle cards with realistic photos of a debadged SUV, a debadged sedan and a debadged pickup truck, each card labeled only \"SUV\", \"Sedan\" or \"Truck\", with a short gray placeholder bar where details would go. The phone shows the same site's vehicle page for the SUV: the photo at the top, then two side-by-side buttons \"Call the store\" and \"Text us\", then four rows labeled \"Price\", \"Mileage\", \"Trim\" and \"Exterior color\", each followed by a soft gray placeholder bar instead of a value. The laptop keyboard keys are completely blank and smooth, with no letters, numbers, symbols or markings on any key. Every vehicle grille is plain, with no emblem and no blank badge plate."
+    },
+    {
+      "slug": "website-vehicle-page",
+      "required": [
+        "Your Dealership",
+        "Compact SUV",
+        "Your Dealership · Your city",
+        "Call the store",
+        "Text us",
+        "Price",
+        "Mileage",
+        "Trim",
+        "Drivetrain",
+        "Ask about this vehicle",
+        "Name",
+        "Mobile",
+        "Send",
+        "Call and text at the top",
+        "Facts as page text",
+        "Sent to your CRM with the vehicle"
+      ],
+      "scene": "A phone standing upright, front-on, on a near-black background, slightly left of center and fully visible from top to bottom, showing a dealership vehicle page template concept with no browser brand. At the top a slim header with the plain text wordmark \"Your Dealership\" and a menu icon. Below it a realistic photo of a green debadged compact SUV parked outdoors, then the title \"Compact SUV\" and the line \"Your Dealership · Your city\". Directly under the title, two large buttons side by side: \"Call the store\" in white and \"Text us\" in electric blue. Then a facts list with the labels \"Price\", \"Mileage\", \"Trim\" and \"Drivetrain\", each followed by a soft gray placeholder bar instead of a value. At the bottom a short form titled \"Ask about this vehicle\" with the fields \"Name\" and \"Mobile\" and a blue button \"Send\". To the right of the phone, three floating cards connected to the phone by thin glowing blue lines, titled \"Call and text at the top\", \"Facts as page text\" and \"Sent to your CRM with the vehicle\"."
+    },
+    {
+      "slug": "website-ai-readable",
+      "required": [
+        "Your Dealership",
+        "Midsize Sedan",
+        "Price",
+        "Mileage",
+        "Trim",
+        "Features",
+        "What search engines and AI assistants can read",
+        "Vehicle facts as page text",
+        "Vehicle and dealer structured data",
+        "One clean URL for every vehicle",
+        "Sitemap and crawl access",
+        "\"@type\": \"Car\"",
+        "\"name\": \"Midsize Sedan\"",
+        "\"seller\": \"Your Dealership\""
+      ],
+      "scene": "A laptop screen, front-on, split into two panes, with no browser brand. Left pane: a dealership vehicle page template concept with a slim header showing the plain text wordmark \"Your Dealership\", a realistic photo of a silver debadged midsize sedan parked outdoors, the title \"Midsize Sedan\", and four rows labeled \"Price\", \"Mileage\", \"Trim\" and \"Features\", each with a soft gray placeholder bar instead of a value; thin dashed electric-blue outlines surround the title and the four rows. Right pane: a dark panel titled \"What search engines and AI assistants can read\", with four rows, each starting with a blue check mark: \"Vehicle facts as page text\", \"Vehicle and dealer structured data\", \"One clean URL for every vehicle\" and \"Sitemap and crawl access\". Under the rows, a small code card in a monospace font showing exactly three lines and nothing else, with no braces and no line numbers: \"@type\": \"Car\", \"name\": \"Midsize Sedan\", \"seller\": \"Your Dealership\". Every key and value in the code card is wrapped in straight double quotes exactly as written. The laptop keyboard keys are completely blank and smooth, with no letters, numbers, symbols or markings on any key. The vehicle grille is plain, with no emblem and no blank badge plate."
+    }
+  ]
+}

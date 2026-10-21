@@ -1,6 +1,8 @@
 // Metadata follows the visible service page, not a claimed ranking or a fabricated review.
 // The dedicated route shell is built by spa-fallback.mjs, never by the static silo renderer.
 import { WEBSITE_PATH } from '../../shared/dealer-websites-route.js';
+import { WEBSITE_IMAGES } from '../../shared/dealer-websites-images.js';
+import { IMAGE_SIZES, imagePreloadHtml } from '../../shared/responsive-images.js';
 import {
   FAQ,
   HERO,
@@ -73,7 +75,8 @@ export function dealerWebsitesGraph() {
 
 export function dealerWebsitesHead({ preview = false } = {}) {
   const json = JSON.stringify(dealerWebsitesGraph()).replaceAll('<', '\\u003c');
-  return `    <meta name="description" content="${escAttr(META.description)}" />
+  return `    ${imagePreloadHtml(WEBSITE_IMAGES.hero, IMAGE_SIZES.websitesHero)}
+    <meta name="description" content="${escAttr(META.description)}" />
 ${preview ? '' : '    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />\n'}    <link rel="canonical" href="${WEBSITE_CANONICAL}" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="${WEBSITE_CANONICAL}" />

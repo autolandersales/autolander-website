@@ -52,11 +52,11 @@ test('copy module keeps the public copy rules: no dashes, hype, competitor names
   }
 });
 
-test('proof is first party, dated and captioned as our own result; the hero CTA is the form CTA', () => {
-  assert.equal(PROOF.stats.length, 4);
-  for (const stat of PROOF.stats) assert.match(stat.detail, /2026|paying accounts/, stat.label);
+test('proof is the dealership count plus qualitative points, captioned as our own business; the hero CTA is the form CTA', () => {
+  assert.deepEqual(PROOF.stats.map((stat) => stat.value), ['200+']);
+  assert.ok(PROOF.points.length >= 2 && PROOF.points.every((point) => point.title && point.body && !/\d/.test(`${point.title} ${point.body}`)));
   assert.match(PROOF.caption, /not a forecast or a promise/);
-  assert.match(PROOF.lead, /October 19, 2026/);
+  assert.doesNotMatch(`${PROOF.lead} ${PROOF.caption}`, /Lighthouse|CRM|read on|\d{4}/i);
   assert.equal(HERO.cta, FORM.submit);
   assert.ok(META.title.length <= 60);
   assert.ok(META.description.length <= 160);
@@ -65,7 +65,7 @@ test('proof is first party, dated and captioned as our own result; the hero CTA 
 test('the no-JS mirror renders every section of the copy module in order, with one form and the FAQ verbatim', () => {
   const html = renderDealerWebsitesMirrorRest({ capiUrl: 'https://autolander.ai' });
   const body = text(html);
-  for (const needle of [PROOF.title, WEB.PROBLEM.title, WEB.BUILD.title, WEB.SEARCH.title, WEB.PROCESS.title, WEB.FIT.title, WEB.PROMISES.title, WEB.NEVER_PROMISE.title, FORM.title, WEB.FINAL.h2Lead]) {
+  for (const needle of [PROOF.title, WEB.PROBLEM.title, WEB.BUILD.title, WEB.SEARCH.title, WEB.PROCESS.title, WEB.FIT.title, WEB.PROMISES.title, WEB.NEVER_PROMISE.title, FORM.title, WEB.FINAL.h2Lead, ...PROOF.points.map((point) => point.title)]) {
     assert.ok(body.includes(needle), needle);
   }
   const order = ['id="proof"', 'id="why-a-new-site"', 'id="the-build"', 'id="search-foundations"', 'id="your-plan"', 'id="fit"', 'id="website-request-form"', 'id="website-questions"'].map((id) => html.indexOf(id));
@@ -75,4 +75,5 @@ test('the no-JS mirror renders every section of the copy module in order, with o
   for (const item of [...WEB.PROMISES.items, ...WEB.NEVER_PROMISE.items, ...WEB.FIT.good, ...WEB.FIT.bad]) assert.ok(body.includes(item), item);
   assert.equal((html.match(/<form\b/g) || []).length, 1);
   assert.doesNotMatch(html, /\$\d/);
+  assert.doesNotMatch(html, /<footer\b|dw-footer|dw-mobile-example/);
 });

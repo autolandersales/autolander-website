@@ -11,6 +11,9 @@ export const IMAGE_SIZES = {
   adsPoster: '(min-width: 1024px) 340px, min(100vw - 48px, 340px)',
   adsClose: '(min-width: 1024px) 388px, min(100vw - 80px, 328px)',
   teamAccess: '(min-width: 1280px) 735px, (min-width: 1024px) calc(64vw - 84px), (min-width: 640px) calc(100vw - 106px), calc(100vw - 90px)',
+  websitesHero: '(min-width: 1344px) 650px, (min-width: 1101px) calc(53vw - 63px), (min-width: 851px) calc(53vw - 50px), (min-width: 541px) min(640px, calc(100vw - 64px)), calc(100vw - 40px)',
+  websitesBuild: '(min-width: 1344px) 608px, (min-width: 1101px) calc(50vw - 64px), (min-width: 851px) calc(50vw - 52px), (min-width: 541px) min(640px, calc(100vw - 64px)), calc(100vw - 40px)',
+  websitesWide: '(min-width: 1024px) 960px, (min-width: 541px) calc(100vw - 64px), calc(100vw - 40px)',
 };
 
 export const imageSrcSet = (image, format) => image.widths.map((width) => `${image.base}-${width}.${format} ${width}w`).join(', ');

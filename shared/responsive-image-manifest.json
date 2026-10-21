@@ -185,5 +185,41 @@
       640,
       960
     ]
+  },
+  "website-concept-hero": {
+    "base": "/dealership-websites/website-concept-hero",
+    "src": "/dealership-websites/website-concept-hero-1600.webp",
+    "width": 2048,
+    "height": 1536,
+    "widths": [
+      640,
+      960,
+      1280,
+      1600
+    ]
+  },
+  "website-vehicle-page": {
+    "base": "/dealership-websites/website-vehicle-page",
+    "src": "/dealership-websites/website-vehicle-page-1600.webp",
+    "width": 2048,
+    "height": 1536,
+    "widths": [
+      640,
+      960,
+      1280,
+      1600
+    ]
+  },
+  "website-ai-readable": {
+    "base": "/dealership-websites/website-ai-readable",
+    "src": "/dealership-websites/website-ai-readable-1600.webp",
+    "width": 2048,
+    "height": 1536,
+    "widths": [
+      640,
+      960,
+      1280,
+      1600
+    ]
   }
 }

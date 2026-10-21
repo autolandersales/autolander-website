@@ -51,13 +51,11 @@ test('the homepage uses the shared navigation and footer', () => {
 });
 
 test('lazy route styles include the shared navigation responsive utilities', () => {
-  for (const stylesheet of ['src/ai/ai.css', 'src/team/team.css', 'src/ads/ads.css']) {
+  for (const stylesheet of ['src/ai/ai.css', 'src/team/team.css', 'src/ads/ads.css', 'src/websites/websites.css']) {
     const css = read(stylesheet);
     assert.match(css, /@source "\.\.\/components\/SiteNav\.jsx";/, stylesheet);
     assert.match(css, /@source "\.\.\/components\/SiteFooter\.jsx";/, stylesheet);
   }
-  // The website page has a bespoke, static footer, but shares the same interactive site navigation.
-  assert.match(read('src/websites/websites.css'), /@source "\.\.\/components\/SiteNav\.jsx";/);
 });
 
 test('the static homepage mirror exposes all Services destinations without JavaScript', () => {

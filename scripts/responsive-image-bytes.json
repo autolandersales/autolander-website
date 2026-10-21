@@ -706,5 +706,149 @@
     "width": 960,
     "format": "webp",
     "bytes": 83406
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 640,
+    "format": "avif",
+    "bytes": 20591
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 640,
+    "format": "webp",
+    "bytes": 29978
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 960,
+    "format": "avif",
+    "bytes": 38190
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 960,
+    "format": "webp",
+    "bytes": 57258
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 1280,
+    "format": "avif",
+    "bytes": 61252
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 1280,
+    "format": "webp",
+    "bytes": 89816
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 1600,
+    "format": "avif",
+    "bytes": 84908
+  },
+  {
+    "slug": "website-concept-hero",
+    "width": 1600,
+    "format": "webp",
+    "bytes": 126654
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 640,
+    "format": "avif",
+    "bytes": 15195
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 640,
+    "format": "webp",
+    "bytes": 22150
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 960,
+    "format": "avif",
+    "bytes": 25569
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 960,
+    "format": "webp",
+    "bytes": 38398
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 1280,
+    "format": "avif",
+    "bytes": 37919
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 1280,
+    "format": "webp",
+    "bytes": 58102
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 1600,
+    "format": "avif",
+    "bytes": 50501
+  },
+  {
+    "slug": "website-vehicle-page",
+    "width": 1600,
+    "format": "webp",
+    "bytes": 78634
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 640,
+    "format": "avif",
+    "bytes": 22566
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 640,
+    "format": "webp",
+    "bytes": 35402
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 960,
+    "format": "avif",
+    "bytes": 39205
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 960,
+    "format": "webp",
+    "bytes": 64214
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 1280,
+    "format": "avif",
+    "bytes": 60124
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 1280,
+    "format": "webp",
+    "bytes": 94716
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 1600,
+    "format": "avif",
+    "bytes": 81467
+  },
+  {
+    "slug": "website-ai-readable",
+    "width": 1600,
+    "format": "webp",
+    "bytes": 126462
   }
 ]

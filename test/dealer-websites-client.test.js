@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { normalizeWebsite, validateWebsiteRequest } from '../src/websites/website-request.js';
 import { PROJECT_GOAL_CHOICES, ROLE_CHOICES } from '../shared/dealer-websites-form.js';
 import { renderDealerWebsitesMirrorRest } from '../src/websites/static-mirror.js';
-import { FORM, HERO } from '../shared/dealer-websites-content.js';
+import { FORM, HERO, ILLUSTRATIONS } from '../shared/dealer-websites-content.js';
 
 const valid = { dealershipName: 'Example Motors', website: '', location: 'Tampa, FL', projectGoal: PROJECT_GOAL_CHOICES[0], fullName: 'Jamie Dealer', role: ROLE_CHOICES[0], email: 'jamie@example.com', phone: '(212) 555-0123' };
 test('a dealer without a current website can request a build', () => {
@@ -31,7 +31,8 @@ test('native fallback has optional website, unchecked consent, receipt/error anc
   assert.ok(consent); assert.doesNotMatch(consent, /checked/);
   for (const field of FORM.fields) assert.match(html, new RegExp(`id="website-${field.name}"`));
   assert.equal(HERO.cta, FORM.submit);
-  assert.match(html, /Example layout, not a live dealer website or a vehicle offer/);
+  assert.ok(html.includes(ILLUSTRATIONS.caption), 'island illustrations carry the concept caption');
+  assert.doesNotMatch(html, /<footer\b/);
 });
 test('browser emits no service conversion, success depends on HTTP acceptance and failed requests preserve details', () => {
   const request = readFileSync(new URL('../src/websites/website-request.js', import.meta.url), 'utf8');

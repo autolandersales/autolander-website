@@ -9,6 +9,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { TEAM_IMAGES } from '../shared/page-images.js';
 import { AI_VISIBILITY_IMAGES } from '../shared/ai-images.js';
+import { WEBSITE_IMAGES } from '../shared/dealer-websites-images.js';
 import { IMAGE_SIZES, responsiveImageHtml, imageSrcSet } from '../shared/responsive-images.js';
 import { WHERE_BUYERS_ASK, RESULTS_VIEW, ENGINES, ILLUSTRATION_SLOTS } from '../shared/ai-visibility-content.js';
 import { AI_VISIBILITY_MD_PATH } from '../shared/ai-visibility-route.js';
@@ -85,7 +86,7 @@ test('production audit rejects quotes, dealer/metric pairs, headings and escaped
 test('every declared derivative exists, preserves its ratio and never upscales', async () => {
   assert.equal(AI_VISIBILITY_IMAGES.length, 9);
   const expectedFiles = [];
-  for (const item of [...AI_VISIBILITY_IMAGES, ...Object.values(TEAM_IMAGES)]) {
+  for (const item of [...AI_VISIBILITY_IMAGES, ...Object.values(TEAM_IMAGES), ...Object.values(WEBSITE_IMAGES)]) {
     assert.ok(item.alt && item.width > 0 && item.height > 0);
     assert.deepEqual(item.widths, [640, 960, 1280, 1600, ...((item.sourceWidth || item.width) >= 2560 ? [1920] : [])]);
     for (const width of item.widths) {
@@ -101,9 +102,9 @@ test('every declared derivative exists, preserves its ratio and never upscales',
       }
     }
   }
-  const actualFiles = ['public/ai-visibility', 'public/team'].flatMap(filesIn).filter((file) => /\.(avif|webp)$/.test(file));
+  const actualFiles = ['public/ai-visibility', 'public/team', 'public/dealership-websites'].flatMap(filesIn).filter((file) => /\.(avif|webp)$/.test(file));
   assert.deepEqual(actualFiles.sort(), expectedFiles.sort(), 'all image files must be declared and decoded');
-  for (const page of ['team', 'ai-visibility']) {
+  for (const page of ['team', 'ai-visibility', 'dealership-websites']) {
     const file = `public/og/${page}.jpg`;
     const meta = await sharp(file).metadata();
     await sharp(file, { failOn: 'warning' }).raw().toBuffer();
