@@ -47,10 +47,9 @@
 /* The house in-body CTA, as on the sibling Services pages (the src/ads/PaidAdsApp.jsx apply button): rounded-2xl,
    bg-blue-600 with hover bg-blue-500, Archivo extrabold uppercase italic, tracking-tight, white text,
    shadow-lg shadow-blue-600/30, px-6 py-5, text-base and sm:text-lg. */
-.dw-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 20px 24px; border: 0; border-radius: 16px; background: #2563eb; color: #fff; font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; letter-spacing: -.025em; font-size: 16px; line-height: 1.5; text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgb(37 99 235 / .3), 0 4px 6px -4px rgb(37 99 235 / .3); transition: background-color .15s cubic-bezier(.4, 0, .2, 1), color .15s cubic-bezier(.4, 0, .2, 1), transform .15s; }
-.dw-button:hover { background: #3b82f6; }
-.dw-button:active { transform: scale(.95); }
-.dw-button:disabled { opacity: .7; cursor: wait; transform: none; }
+.dw-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 20px 24px; border: 0; border-radius: 16px; background: var(--color-blue-600); color: #fff; font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; letter-spacing: -.025em; font-size: 16px; line-height: 1.5; text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 10px 15px -3px color-mix(in oklab, var(--color-blue-600) 30%, transparent), 0 4px 6px -4px color-mix(in oklab, var(--color-blue-600) 30%, transparent); transition: background-color .15s cubic-bezier(.4, 0, .2, 1), color .15s cubic-bezier(.4, 0, .2, 1); }
+.dw-button:hover { background: var(--color-blue-500); }
+.dw-button:disabled { opacity: .7; cursor: wait; }
 .dw-button span { font-size: 18px; font-weight: 400; font-style: normal; }
 @media (min-width: 640px) { .dw-button { font-size: 18px; line-height: 1.5556; } }
 .dw-hero { padding: 165px 0 75px; background: radial-gradient(ellipse at 75% 30%,#1023489c,transparent 62%),linear-gradient(120deg,#05080e,#050505 55%); }
@@ -202,7 +201,6 @@
   .dw-fields { grid-template-columns: 1fr; gap: 19px; }
   .dw-field input, .dw-field select { font-size: 16px; }
   .dw-consent { font-size: 10px; }
-  .dw-form-shell .dw-button { font-size: 14px; padding-inline: 12px; }
   .dw-faq summary { font-size: 14px; }
   .dw-final { padding: 65px 0; }
 }

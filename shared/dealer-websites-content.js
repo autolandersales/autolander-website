@@ -74,7 +74,7 @@ export const JOURNEY = {
 export const PROOF = {
   eyebrow: 'Our own site is the proof',
   title: 'We built autolander.ai the way we would build yours.',
-  lead: 'Every method on this page runs on our own website first. You are reading it.',
+  lead: 'The search and speed foundations on this page run on our own website first. You are reading it.',
   // The dealership count is the only figure (paying accounts, the same count the paid-ads page shows).
   stats: [
     { value: '200+', label: 'dealerships run AutoLander', detail: 'paying accounts' },

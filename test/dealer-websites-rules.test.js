@@ -133,12 +133,18 @@ test('house type and CTA: Archivo 800 italic uppercase headings, the blue house 
   // The sibling Services pages' in-body CTA (src/ads/PaidAdsApp.jsx): rounded-2xl bg-blue-600, hover bg-blue-500,
   // Archivo extrabold uppercase italic, tracking-tight, white text, px-6 py-5, text-base and sm:text-lg.
   const button = rule('.dw-button');
-  for (const decl of [/border-radius:\s*16px/, /background:\s*#2563eb\b/i, /[;{]\s*color:\s*#fff\b/i, /font-family:\s*var\(--font-display\)/,
-    /font-weight:\s*800/, /font-style:\s*italic/, /text-transform:\s*uppercase/, /letter-spacing:\s*-\.025em/, /padding:\s*20px 24px/, /font-size:\s*16px/]) {
+  // Tailwind 4 colors come from the theme variables, so the page renders the same blue as the siblings.
+  for (const decl of [/border-radius:\s*16px/, /background:\s*var\(--color-blue-600\)/, /[;{]\s*color:\s*#fff\b/i, /font-family:\s*var\(--font-display\)/,
+    /font-weight:\s*800/, /font-style:\s*italic/, /text-transform:\s*uppercase/, /letter-spacing:\s*-\.025em/, /padding:\s*20px 24px/, /font-size:\s*16px/,
+    /box-shadow:[^;]*color-mix\(in oklab, var\(--color-blue-600\) 30%, transparent\)/]) {
     assert.match(button, decl, String(decl));
   }
-  assert.match(rule('.dw-button:hover'), /background:\s*#3b82f6\b/i);
+  assert.match(rule('.dw-button:hover'), /background:\s*var\(--color-blue-500\)/);
   assert.match(css, /@media \(min-width: 640px\) \{ \.dw-button \{ font-size: 18px;/);
+  // Same size at every width: only the base rule and the 640px step set font-size or padding on the button.
+  const sizing = [...css.matchAll(/\.dw-button\s*\{([^}]*)\}/g)].filter(([, body]) => /font-size|padding/.test(body));
+  assert.equal(sizing.length, 2, 'no other .dw-button rule sets font-size or padding');
+  assert.doesNotMatch(css, /\.dw-button:active/);
   assert.doesNotMatch(css, /font-weight:\s*900/);
   assert.match(css, /--font-display: 'Archivo', 'Archivo Fallback', 'Archivo Fallback Roboto'/);
   assert.doesNotMatch(css, /(^|[\s,{}])\.dw-page (?:h[1-6]|p)\b/m);
