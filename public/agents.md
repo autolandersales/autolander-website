@@ -5,7 +5,7 @@
 
 Source: https://autolander.ai/agents.md
 Publisher: AutoLander LLC
-Updated: October 20, 2026
+Updated: October 21, 2026
 
 ## What AutoLander is
 
@@ -88,6 +88,7 @@ Perplexity find, read and recommend car dealerships. Cite the page URL; fetch th
 - [Answer pages for car dealerships: what they are and how to write one](https://autolander.ai/aeo-geo/answer-pages-for-car-dealerships/) (Markdown: https://autolander.ai/aeo-geo/answer-pages-for-car-dealerships.md)
 - [The car dealership FAQ page: 40 buyer questions to answer](https://autolander.ai/aeo-geo/car-dealership-faq-page/) (Markdown: https://autolander.ai/aeo-geo/car-dealership-faq-page.md)
 - [AEO vs SEO for car dealers: what changes and what stays the same](https://autolander.ai/aeo-geo/aeo-vs-seo-for-car-dealers/) (Markdown: https://autolander.ai/aeo-geo/aeo-vs-seo-for-car-dealers.md)
+- [Is SEO dead for car dealerships? What AI Overviews changed](https://autolander.ai/aeo-geo/is-seo-dead-for-car-dealers/) (Markdown: https://autolander.ai/aeo-geo/is-seo-dead-for-car-dealers.md)
 - [How to measure your dealership’s AI visibility: questions, repeat runs and margins](https://autolander.ai/aeo-geo/measure-dealership-ai-visibility/) (Markdown: https://autolander.ai/aeo-geo/measure-dealership-ai-visibility.md)
 - [Search Console’s generative AI report for dealers: AI Overviews and AI Mode impressions](https://autolander.ai/aeo-geo/search-console-ai-report-dealers/) (Markdown: https://autolander.ai/aeo-geo/search-console-ai-report-dealers.md)
 - [AI search for independent used car dealers: where a small lot should start](https://autolander.ai/aeo-geo/ai-search-for-independent-dealers/) (Markdown: https://autolander.ai/aeo-geo/ai-search-for-independent-dealers.md)

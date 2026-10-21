@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20",
+  "generatedAt": "2026-10-21",
   "note": "Avalanche article drip. status flips via scripts/publish-article.mjs (admin Content Publisher → publish-article workflow).",
   "articles": [
     {
@@ -1353,8 +1353,8 @@
       ],
       "description": "Is SEO dead for car dealerships? What Pew, Google and Microsoft data show about AI Overviews, zero-click searches and where dealer traffic goes now.",
       "suggestedOrder": 53,
-      "status": "draft",
-      "publishedAt": null,
+      "status": "published",
+      "publishedAt": "2026-10-21",
       "siloOrder": 0,
       "cluster": "basics",
       "clusterLabel": "AEO and GEO basics and budget",
