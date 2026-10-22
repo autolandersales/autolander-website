@@ -29,9 +29,9 @@
 
 import { WEBSITE_FORM_ID, WEBSITE_PATH } from './dealer-websites-route.js';
 
-export const WEBSITE_PUBLISHED = '2026-10-21';
-export const WEBSITE_UPDATED = '2026-10-21'; // SET TO THE ACTUAL SHIP DATE
-export const WEBSITE_UPDATED_HUMAN = 'October 21, 2026';
+export const WEBSITE_PUBLISHED = '2026-10-22';
+export const WEBSITE_UPDATED = '2026-10-22'; // SET TO THE ACTUAL SHIP DATE
+export const WEBSITE_UPDATED_HUMAN = 'October 22, 2026';
 
 export const META = {
   title: 'Dealership Websites for SEO and AI Search | AutoLander',
